@@ -30,6 +30,6 @@ from kitup import views as kitup_app_views
 # handled by the appropriate apps 'urls.py' module.
 # This is achieved by the include function.
 urlpatterns = [
-    path('/', include('kitup.urls')),
+    path('', include('kitup.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

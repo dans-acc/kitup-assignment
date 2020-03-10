@@ -1,0 +1,7 @@
+/* Defines a sticky footer i.e. position at bottom. */
+.kitup-sticky-footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: auto;
+}

@@ -48,8 +48,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
 STATIC_URL = '/static/'
+
+# Used by Django to find the paths to the static files. Because we're using static
+# local files, this denotes the root directory of the static files.
+STATICFILES_DIRS = [STATIC_DIR,]
 
 # Used bu django to set up media file hosting.
 # The '/' ensures that the root of the URL '/media/' is separate
