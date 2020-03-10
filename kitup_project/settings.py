@@ -16,8 +16,14 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
+# References the template directory in which the HTML files are held.
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
+
+# References the static files dir in which media and other files are held.
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
+# References the path to where media files will be uploaded by the users.
+MEDIA_DIR = os.path.join(BASE_DIR, 'media')
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '+3_#$o94)7_bm-hbhp7bjgqtn_6a2599m-5##md04unlxn52l2'
@@ -27,6 +33,36 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Internationalization
+# https://docs.djangoproject.com/en/2.1/topics/i18n/
+
+LANGUAGE_CODE = 'en-us'
+
+TIME_ZONE = 'UTC'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = True
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.1/howto/static-files/
+
+STATIC_URL = '/static/'
+
+# Used bu django to set up media file hosting.
+# The '/' ensures that the root of the URL '/media/' is separate
+# from the file names that are being uploaded.
+
+# MEDIA_ROOT informs django where to look for the media files in the file
+# system.
+MEDIA_ROOT = MEDIA_DIR
+
+# MEDIA_URL informs django the URL that should be served.
+MEDIA_URL = '/media/'
+
+#
 
 # Application definition
 
@@ -37,6 +73,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'bootstrap4',
+
+    'kitup'
 ]
 
 MIDDLEWARE = [
@@ -51,10 +91,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'kitup_project.urls'
 
+
+# 'django.template.context_processors.media' enables RequestContext to contain a variable MEDIA_URL
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -62,6 +105,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -98,23 +143,3 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-
-# Internationalization
-# https://docs.djangoproject.com/en/2.1/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_L10N = True
-
-USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/2.1/howto/static-files/
-
-STATIC_URL = '/static/'
