@@ -15,7 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls import include
 
+# For setting up dynamic media - uploads by the user.
+from django.conf import settings
+from django.conf.urls.static import static
+
+# Import views from the projects
+from kitup import views as kitup_app_views
+
+# Redirects anything that does not start with anything.
+# Mapping checks for URL beginnings.
+# When a match is made, the remainder of the URL string is passed and
+# handled by the appropriate apps 'urls.py' module.
+# This is achieved by the include function.
 urlpatterns = [
+    path('/', include('kitup.urls')),
     path('admin/', admin.site.urls),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

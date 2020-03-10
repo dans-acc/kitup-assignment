@@ -62,8 +62,6 @@ MEDIA_ROOT = MEDIA_DIR
 # MEDIA_URL informs django the URL that should be served.
 MEDIA_URL = '/media/'
 
-#
-
 # Application definition
 
 INSTALLED_APPS = [
