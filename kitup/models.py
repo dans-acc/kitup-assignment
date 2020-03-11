@@ -5,6 +5,7 @@ import datetime
 # Create your models here.
 
 
+# This is the users table
 class Users(models.Model):
     user_id = models.UUIDField(primary_key=True)
     forename = models.CharField(max_length=30)
@@ -22,6 +23,7 @@ class Users(models.Model):
         return self.forename + " " + self.surname
 
 
+# This is the sport table
 class Sport(models.Model):
     sport_id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=30)
@@ -31,6 +33,7 @@ class Sport(models.Model):
         return self.name
 
 
+# This is the match table
 class Match(models.Model):
     match_id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=30)
@@ -44,6 +47,7 @@ class Match(models.Model):
     end_datetime = models.DateTimeField()
 
 
+# This is the match player table
 class Player(models.Model):
     player_id = models.ForeignKey(Users, on_delete=models.CASCADE)
     game_id = models.ForeignKey(Match, on_delete=models.CASCADE)
@@ -53,6 +57,7 @@ class Player(models.Model):
         unique_together = ('player_id', 'game_id')
 
 
+# This is the report a player table
 class Report(models.Model):
     report_id = models.UUIDField(primary_key=True)
     report_maker = models.IntegerField()
