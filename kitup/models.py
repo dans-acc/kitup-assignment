@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-import datetime
 
 # Create your models here.
 
@@ -12,7 +11,7 @@ class Users(models.Model):
     surname = models.CharField(max_length=30)
     email = models.EmailField(max_length=100, unique=True)
     password = models.CharField(max_length=256)
-    picture = models.ImageField()
+    picture = models.ImageField(upload_to='profile_images', blank=True)
     rating = models.IntegerField()
     strikes = models.IntegerField()
     joined_on = models.DateTimeField(default=timezone.now())

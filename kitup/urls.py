@@ -10,8 +10,8 @@ app_name = 'kitup'
 # Parameter for path function is the string to match;
 # Empty means that a match will be made when nothing is there;
 # Second parameter denotes the view that's to be called;
-# Third parameter, name, is an optional parameter;
-# Provides a concenient way to reference the view;
+# The third parameter, name, is an optional parameter;
+# Provides a convenient way to reference the view;
 urlpatterns = [
     path('', views.index, name='index'),
     path('register/', views.user_register, name='register'),

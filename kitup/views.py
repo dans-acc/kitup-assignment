@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
+
 # The main page for the website.
 def index(request):
 
@@ -12,6 +13,7 @@ def index(request):
 	# Render the index response i.e. create the template.
 	response = render(request, 'kitup/index.html', context_dictionary)
 	return response
+
 
 # Invoked to display the registration view to the new user.
 def user_register(request):
@@ -23,6 +25,7 @@ def user_register(request):
 	response = render(request, 'kitup/register.html', context_dictionary)
 	return response
 
+
 # Invoked in the event the user wants to log into their account.
 def user_login(request):
 
@@ -32,6 +35,7 @@ def user_login(request):
 	# Render the login response i.e. create the template.
 	response = render(request, 'kitup/login.html', context_dictionary)
 	return response
+
 
 # Invoked in the event the user wishes to log out.
 @login_required
