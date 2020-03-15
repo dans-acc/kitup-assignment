@@ -1,9 +1,6 @@
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
-
-
 # This is the users table
 class Users(models.Model):
     user_id = models.UUIDField(primary_key=True)
@@ -21,8 +18,6 @@ class Users(models.Model):
     def __str__(self):
         return self.forename + " " + self.surname
 
-
-# This is the sport table
 class Sport(models.Model):
     sport_id = models.UUIDField(primary_key=True)
     name = models.CharField(max_length=30)
@@ -30,7 +25,6 @@ class Sport(models.Model):
 
     def __str__(self):
         return self.name
-
 
 # This is the match table
 class Match(models.Model):

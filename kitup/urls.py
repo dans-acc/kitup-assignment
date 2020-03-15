@@ -14,7 +14,17 @@ app_name = 'kitup'
 # Provides a convenient way to reference the view;
 urlpatterns = [
     path('', views.index, name='index'),
+    
     path('register/', views.user_register, name='register'),
     path('login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
+    path('recover/', views.user_recover, name='recover'),
+    path('profile/', views.user_profile, name='profile'),
+    path('settings/', views.user_settings, name='settings'),
+
+    path('match/find', views.match_find, name='match_find'),
+    path('match/view', views.match_view, name='match_view'),
+    path('match/create', views.match_create, name='match_create'),
+    path('match/leave', views.match_leave, name='match_leave'),
+    path('match/post', views.match_post, name='match_post'),
 ]
