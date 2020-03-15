@@ -3,7 +3,7 @@ from django.utils import timezone
 
 # This is the users table
 class Users(models.Model):
-    user_id = models.UUIDField(primary_key=True)
+    user_id = models.AutoField(primary_key=True)
     forename = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
     email = models.EmailField(max_length=100, unique=True)
@@ -19,7 +19,7 @@ class Users(models.Model):
         return self.forename + " " + self.surname
 
 class Sport(models.Model):
-    sport_id = models.UUIDField(primary_key=True)
+    sport_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
     team_size = models.IntegerField()
 
@@ -28,7 +28,7 @@ class Sport(models.Model):
 
 # This is the match table
 class Match(models.Model):
-    match_id = models.UUIDField(primary_key=True)
+    match_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=30)
     sport_id = models.ForeignKey(Sport, on_delete=models.CASCADE)
     min_age = models.IntegerField(default=18)
@@ -36,8 +36,9 @@ class Match(models.Model):
     min_rating = models.IntegerField()
     team_home_score = models.IntegerField()
     team_away_score = models.IntegerField()
-    start_datetime = models.DateTimeField()
-    end_datetime = models.DateTimeField()
+    date = models.DateField()
+    time = models.TimeField()
+    duration = models.IntegerField()
 
 
 # This is the match player table
@@ -52,7 +53,7 @@ class Player(models.Model):
 
 # This is the report a player table
 class Report(models.Model):
-    report_id = models.UUIDField(primary_key=True)
+    report_id = models.AutoField(primary_key=True)
     report_maker = models.IntegerField()
     report_subject = models.IntegerField()
     reason = models.CharField(max_length=20)
