@@ -22,9 +22,9 @@ urlpatterns = [
     path('profile/', views.user_profile, name='profile'),
     path('settings/', views.user_settings, name='settings'),
 
-    path('match/find', views.match_find, name='match_find'),
-    path('match/view', views.match_view, name='match_view'),
     path('match/create', views.match_create, name='match_create'),
-    path('match/leave', views.match_leave, name='match_leave'),
-    path('match/post', views.match_post, name='match_post'),
+    path('match/leave/<int:match_id>/', views.match_leave, name='match_leave'),
+    path('match/find/<int:match_id>/', views.match_find, name='match_find'),
+    path('match/view/<int:match_id>/', views.match_view, name='match_view'),
+    path('match/post/<int:match_id>/', views.match_post, name='match_post'),
 ]
