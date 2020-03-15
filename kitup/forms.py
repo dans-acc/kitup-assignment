@@ -14,11 +14,16 @@ class UserRegistrationForm(forms.ModelForm):
         model = User
         fields = ['username', 'email']
 
-        # The following lines integrate the CSS/Bootstrap4 implementation in register.html using widgets
+        # The following lines integrate the CSS/Bootstrap4 implementation in register.html using widgets/attributes
 
         widgets = {
             'username': forms.TextInput(attrs={'class': 'form-control', 'autofocus': 'true', 'required': 'true'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'true'}),
+        }
+
+        # Band aid fix for the 'required field text always showing'
+        help_texts = {
+            'username': '',
         }
 
     # The following function checks for the user password for validation
