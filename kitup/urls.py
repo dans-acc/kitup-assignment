@@ -20,11 +20,12 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('recover/', views.user_recover, name='recover'),
     path('profile/', views.user_profile, name='profile'),
+    path('profile/<int:user_id>/', views.view_profile, name='view_profile'),
     path('settings/', views.user_settings, name='settings'),
 
     path('match/create', views.match_create, name='match_create'),
     path('match/leave/<int:match_id>/', views.match_leave, name='match_leave'),
-    path('match/find/<int:match_id>/', views.match_find, name='match_find'),
+    path('match/find/<str:match_name>/', views.match_find, name='match_find'),
     path('match/view/<int:match_id>/', views.match_view, name='match_view'),
     path('match/post/<int:match_id>/', views.match_post, name='match_post'),
 ]
