@@ -12,10 +12,69 @@ def index(request):
 
 
 # Invoked to display the registration view to the new user.
+from django.shortcuts import render, redirect, reverse
+from django.http import HttpResponse
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from kitup.forms import UserRegistrationForm
+
+
+# The main page for the website.
+def index(request):
+    # Create the context dictionary; contains the available games.
+    context_dictionary = {}
+
+    # Render the index response i.e. create the template.
+    response = render(request, 'kitup/index.html', context_dictionary)
+    return response
+
+
+# Invoked to display the registration view to the new user.
 def user_register(request):
-	context_dictionary = {}
-	response = render(request, 'kitup/register.html', context_dictionary)
-	return response
+    registered = False
+
+    if request.method == 'POST':
+        user_reg = UserRegistrationForm(request.POST)
+
+        # If the two forms are valid...
+        if user_reg.is_valid():
+            # Save the user's form data to the database.
+            user = user_reg.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+            registered = True
+        else:
+            # Print problems to the terminal.
+            print(user_reg.errors)
+
+    else:
+        user_reg = UserRegistrationForm()
+
+    # Render the template depending on the context.
+    return render(request,
+                  'kitup/register.html',
+                  context={'user_reg': user_reg,
+                           'registered': registered})
+
+
+# Invoked in the event the user wants to log into their account.
+def user_login(request):
+    # Create the context dictionary for the login request.
+    context_dictionary = {}
+
+    # Render the login response i.e. create the template.
+    response = render(request, 'kitup/login.html', context_dictionary)
+    return response
+
+
+# Invoked in the event the user wishes to log out.
+@login_required
+def user_logout(request):
+    logout(request)
+    return redirect(reverse('kitup:index'))
 
 
 # Invoked in the event the user wants to log into their account.

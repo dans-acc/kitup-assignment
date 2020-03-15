@@ -3,9 +3,32 @@
 
 <!-- Override the title of the page. -->
 {% block title_block %}
-	Register!
+	Register
 {% endblock %}
 
 <!-- Override the content block for the page. -->
 {% block content_block %}
+
+<div class="container mx-auto my-5">
+		<div class="row">
+			<div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+				<div class="card card-signin my-5">
+					<div class="card-body">
+						<h5 class="card-title text-center">Register</h5>
+							<form id = "user_reg" method = "post" action="{% url 'kitup:register' %}" enctype="multipart/form-data">
+								{% csrf_token %}
+								{{ user_reg.as_p }}
+								<button class="btn btn-lg btn-success btn-block text-uppercase" type="submit">Sign Up</button>
+							</form>
+
+							<!-- NYI -->
+							<hr class="my-4">
+							<button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i class="fab fa-google mr-2"></i> Sign in with Google</button>
+							<button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
 {% endblock %}
