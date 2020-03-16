@@ -25,18 +25,18 @@ class ProfileForm(forms.ModelForm):
 class MatchForm(forms.ModelForm):
 
     # Define the match id's, names and owners.
-    name = forms.CharField(max_length=Match.NAME_MAX_LENGTH, 'Please enter the name of the match.')
+    name = forms.CharField(max_length=Match.NAME_MAX_LENGTH, help_text='Please enter the name of the match.')
 
     # Define the minimum and maximum ages fields.
     min_age = forms.IntegerField(initial=Match.DEFAULT_MIN_AGE, help_text='Enter the minimum age a person must be in order to participate')
     max_age = forms.IntegerField(initial=Match.DEFAULT_MAX_AGE, help_text='Enter the maximum age a player can be in order to participate')
 
     # The rating field.
-    min_rating = forms.IntegerField(intial=Match.DEFAULT_MIN_RATING, help_text='Enter the minimum rating required to join.')
+    min_rating = forms.IntegerField(initial=Match.DEFAULT_MIN_RATING, help_text='Enter the minimum rating required to join.')
 
     # Hide the team fields.
     team_home_score = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
-    team_away_score = forms.IntegerField(widger=forms.HiddenInput(), initial=0)
+    team_away_score = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
     # Meta class defines the model and the fields that are to be displayed.
     class Meta:

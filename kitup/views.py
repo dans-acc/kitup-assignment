@@ -11,7 +11,7 @@ def index(request):
 	return response
 
 
-# Invoked to display the registration view to the new user.
+'''
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
@@ -28,7 +28,7 @@ def index(request):
     response = render(request, 'kitup/index.html', context_dictionary)
     return response
 
-
+'''
 # Invoked to display the registration view to the new user.
 def user_register(request):
     registered = False

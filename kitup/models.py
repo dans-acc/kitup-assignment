@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 # Profile defines the individual users registered for the site.
 # Model extends the default User model implemented by django.
@@ -96,8 +97,8 @@ class Report(models.Model):
     REASON_MAX_LENGTH = 60
 
     # Defines the reporting and reported users.
-    reporting_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    reported_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reporting_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reporting_user')
+    reported_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_user')
 
     # The reason for the report.
     reason = models.CharField(max_length = REASON_MAX_LENGTH)
