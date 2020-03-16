@@ -1,68 +1,113 @@
 from django.db import models
 from django.utils import timezone
 
-# Create your models here.
+# Profile defines the individual users registered for the site.
+# Model extends the default User model implemented by django.
+class Profile(models.Model):
 
+    # Create a one-to-one-link between the profile and the user.
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-# This is the users table
-class Users(models.Model):
-    user_id = models.AutoField(primary_key=True)
-    forename = models.CharField(max_length=30)
-    surname = models.CharField(max_length=30)
-    email = models.EmailField(max_length=100, unique=True)
-    password = models.CharField(max_length=256)
-    picture = models.ImageField(upload_to='profile_image')
-    rating = models.IntegerField()
-    strikes = models.IntegerField()
-    joined_on = models.DateTimeField(default=timezone.now())
-    last_login = models.DateTimeField(null=True)
+    # Additional user information.
+    profile_picture = models.ImageField(upload_to='profile_images')
     age = models.IntegerField()
 
+    # Game specific information.
+    rating = models.IntegerField(default=0)
+    strikes = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name_plural = 'Profiles'
+
+    # Make use of the user models username.
     def __str__(self):
-        return self.forename + " " + self.surname
+        return self.user.username
 
-
-# This is the sport table
+# Defines the sport table i.e. the game type.
 class Sport(models.Model):
-    sport_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
-    team_size = models.IntegerField()
 
+    NAME_MAX_LENGTH = 30
+
+    # The name of the sport and the maximum team sizes.
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    max_team_size = models.IntegerField()
+
+    # Returns a user friendly name for the sport.
     def __str__(self):
         return self.name
 
-
-# This is the match table
+# Defines the match table; contains information pertaining to created matches.
 class Match(models.Model):
-    match_id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=30)
-    match_owner = models.ForeignKey(Users, on_delete=models.CASCADE)
-    sport_id = models.ForeignKey(Sport, on_delete=models.CASCADE)
-    min_age = models.IntegerField(default=18)
-    max_age = models.IntegerField()
-    min_rating = models.IntegerField()
-    team_home_score = models.IntegerField()
-    team_away_score = models.IntegerField()
+
+    NAME_MAX_LENGTH = 30
+
+    DEFAULT_MIN_AGE = 16
+    DEFAULT_MAX_AGE = 68
+    DEFAULT_MIN_RATING = 0
+
+    # Attributes pertaining to the match type.
+    sport = models.ForeignKey(Sport, on_delete=models.CASCADE)
+    name = models.CharField(max_length=NAME_MAX_LENGTH)
+    match_owner = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
     start_datetime = models.DateTimeField(null=True)
     duration = models.IntegerField()
 
+    # Age restructions for the match.
+    min_age = models.IntegerField(default=DEFAULT_MIN_AGE)
+    max_age = models.IntegerField(default=DEFAULT_MAX_AGE)
 
-# This is the match player table
-class Player(models.Model):
-    user_id = models.ForeignKey(Users, on_delete=models.CASCADE)
-    game_id = models.ForeignKey(Match, on_delete=models.CASCADE)
-    team = models.IntegerField()
+    # Rating restrictions for the match.
+    min_rating = models.IntegerField(default=DEFAULT_MIN_RATING)
+
+    # Post match team values.
+    team_home_score = models.IntegerField(default=0)
+    team_away_score = models.IntegerField(default=0)
 
     class Meta:
-        unique_together = ('user_id', 'game_id')
+        verbose_name_plural = 'Matches'
 
+    # Returns the name of the match.
+    def __str__(self):
+        return self.name
 
-# This is the report a player table
+# Defines a player within a match.
+class Player(models.Model):
+
+    # The user and the match for which this entry exists.
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    match = models.ForeignKey(Match, on_delete=models.CASCADE)
+
+    # The team to which they belong.
+    team = models.IntegerField()
+
+    # Defines meta attributes pertaining to the Player model.
+    class Meta:
+        verbose_name_plural = 'Players'
+        unique_together = ('user', 'match')
+
+    # Defines the name of the model.
+    def __str__(self):
+        return user.username
+
+# Defines the model used to report other users.
 class Report(models.Model):
-    report_id = models.AutoField(primary_key=True)
-    report_maker = models.IntegerField()
-    report_subject = models.IntegerField()
-    reason = models.CharField(max_length=20)
 
+    REASON_MAX_LENGTH = 60
+
+    # Defines the reporting and reported users.
+    reporting_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    reported_user = models.ForeignKey(User, on_delete=models.CASCADE)
+
+    # The reason for the report.
+    reason = models.CharField(max_length = REASON_MAX_LENGTH)
+
+    class Meta:
+        verbose_name_plural = 'Reports'
+
+    # A string representation of the report.
     def __str__(self):
         return self.report_id
+
+
+

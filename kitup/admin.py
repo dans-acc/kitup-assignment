@@ -1,10 +1,9 @@
 from django.contrib import admin
 from kitup.models import Users, Player, Match, Report, Sport
 
-# Register your models here.
-
-admin.site.register(Users)
-admin.site.register(Player)
-admin.site.register(Match)
-admin.site.register(Report)
+# Registration of the models.
+admin.site.register(Profile)
 admin.site.register(Sport)
+admin.site.register(Match)
+admin.site.register(Player)
+admin.site.register(Report)
