@@ -1,9 +1,10 @@
 import os
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       'kitup_project.settings')
 
-
 import django
+
 django.setup()
 
 from kitup.models import Users, Player, Match, Sport, Report
@@ -13,24 +14,24 @@ import bcrypt
 
 
 def populate():
-
     salt = 'Hg4'
-    pass1 = 'simpson'.encode('utf-8')
-    pass2 = 'vailjevs'.encode('utf-8')
-    pass3 = 'shehabi'.encode('utf-8')
+    pass1 = b'simpson'
+    pass2 = b'vailjevs'
+    pass3 = b'shehabi'
+
 
     users = [
         {'forename': 'James',
          'surname': 'simpson',
-         'password': bcrypt.hashpw(password=pass1, salt=salt),
+         'password': bcrypt.hashpw(password=pass1, salt=bcrypt.gensalt()),
          'age': 23},
         {'forename': 'Daniels',
          'surname': 'Vasiljevs',
-         'password': bcrypt.hashpw(password=pass2, salt=salt),
+         'password': bcrypt.hashpw(password=pass2, salt=bcrypt.gensalt()),
          'age': 23},
-        {'forename': 'Basil',
+        {'forename': 'Basel',
          'surname': 'Shehabi',
-         'password': bcrypt.hashpw(password=pass3, salt=salt)}
+         'password': bcrypt.hashpw(password=pass3, salt=bcrypt.gensalt())}
     ]
 
     sports = [
@@ -83,7 +84,11 @@ def populate():
 
 
 def add_user(user):
-    u = Users.objects.get_or_create(user=user)[0]
+    print(user)
+    u = Users.objects.get_or_create(forename=user['forename'],
+                                    surname=user['surname'],
+                                    password=user['password'],
+                                    age=user['age'])[0]
     u.save()
     return u
 
@@ -115,4 +120,3 @@ def add_report(report):
 if __name__ == '__main__':
     print("Starting population Script")
     populate()
-
