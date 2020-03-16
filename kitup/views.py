@@ -3,12 +3,14 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
-
 # The main page for the website.
+from kitup.forms import UserForm
+
+
 def index(request):
-	context_dictionary = {}
-	response = render(request, 'kitup/index.html', context_dictionary)
-	return response
+    context_dictionary = {}
+    response = render(request, 'kitup/index.html', context_dictionary)
+    return response
 
 
 '''
@@ -29,12 +31,14 @@ def index(request):
     return response
 
 '''
+
+
 # Invoked to display the registration view to the new user.
 def user_register(request):
     registered = False
 
     if request.method == 'POST':
-        user_reg = UserRegistrationForm(request.POST)
+        user_reg = UserForm(request.POST)
 
         # If the two forms are valid...
         if user_reg.is_valid():
@@ -51,7 +55,7 @@ def user_register(request):
             print(user_reg.errors)
 
     else:
-        user_reg = UserRegistrationForm()
+        user_reg = UserForm()
 
     # Render the template depending on the context.
     return render(request,
@@ -79,59 +83,75 @@ def user_logout(request):
 
 # Invoked in the event the user wants to log into their account.
 def user_login(request):
-	context_dictionary = {}
-	response = render(request, 'kitup/login.html', context_dictionary)
-	return response
+    context_dictionary = {}
+    response = render(request, 'kitup/login.html', context_dictionary)
+    return response
 
 
 # Invoked in the event the user wishes to log out.
 @login_required
 def user_logout(request):
-	logout(request)
-	return redirect(reverse('kitup:index'))
+    logout(request)
+    return redirect(reverse('kitup:index'))
+
 
 # Used to recover the credentials of the user.
 def user_recover(request):
-	pass
+    pass
+
 
 # View the profile of the user. Displays current matches etc.
 @login_required
 def user_profile(request):
-	pass
+    pass
+
 
 # Permits the viewing of another players profile.
 def view_profile(request, user_id):
-	pass
+    pass
+
 
 # Permits the user to edit / alter their settings.
 @login_required
 def user_settings(request):
-	pass
+    pass
+
 
 # Permits the user to report another user.
 @login_required
 def user_report(request, reported_user_id):
     pass
 
+
 # Permits the creation of a match.
 @login_required
 def match_create(request):
-	pass
+    pass
+
 
 # Enables the user to leave a match they're in.
 @login_required
 def match_leave(request, match_id):
-	pass
+    pass
 
-# Find a match based on the name. 
+
+# Find a match based on the name.
 def match_find(request, match_name):
-	pass
+    pass
+
 
 # View a given match based on the match id.
 def match_view(request, match_id):
-	pass
+    pass
+
 
 # Post view enables players to be ranked.
 @login_required
 def match_post(request, match_id):
-	pass
+    pass
+
+
+# Enables players to join teams for a given match
+@login_required
+def match_join(request, match_id):
+    pass

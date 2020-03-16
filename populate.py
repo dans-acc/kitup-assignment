@@ -14,7 +14,6 @@ import bcrypt
 
 
 def populate():
-    salt = 'Hg4'
     pass1 = b'simpson'
     pass2 = b'vailjevs'
     pass3 = b'shehabi'

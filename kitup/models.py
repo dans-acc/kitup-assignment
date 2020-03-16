@@ -1,6 +1,6 @@
 from django.db import models
-from django.utils import timezone
 from django.contrib.auth.models import User
+
 
 # Profile defines the individual users registered for the site.
 # Model extends the default User model implemented by django.
@@ -64,6 +64,9 @@ class Match(models.Model):
     # Post match team values.
     team_home_score = models.IntegerField(default=0)
     team_away_score = models.IntegerField(default=0)
+
+    # Match customisation
+    match_photo = models.ImageField(upload_to='match_images')
 
     class Meta:
         verbose_name_plural = 'Matches'
