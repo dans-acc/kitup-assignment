@@ -108,6 +108,11 @@ def view_profile(request, user_id):
 def user_settings(request):
 	pass
 
+# Permits the user to report another user.
+@login_required
+def user_report(request, reported_user_id):
+    pass
+
 # Permits the creation of a match.
 @login_required
 def match_create(request):

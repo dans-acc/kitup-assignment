@@ -45,9 +45,13 @@ class MatchForm(forms.ModelForm):
 
 # Define the form that is used for the creation of a report.
 class ReportForm(forms.ModelForm):
+
+    # Define the maximum length of the reason.
+    reason = forms.CharField(max_length=Report.REASON_MAX_LENGTH)
+
     class Meta:
         model = Report
-        exclude = ('',)
+        fields = ('reason',)
 
 '''
 

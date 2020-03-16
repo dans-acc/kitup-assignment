@@ -22,6 +22,7 @@ urlpatterns = [
     path('profile/', views.user_profile, name='profile'),
     path('profile/<int:user_id>/', views.view_profile, name='view_profile'),
     path('settings/', views.user_settings, name='settings'),
+    path('report/<int:reported_user_id>', views.user_report, name='report')
 
     path('match/create', views.match_create, name='match_create'),
     path('match/leave/<int:match_id>/', views.match_leave, name='match_leave'),
