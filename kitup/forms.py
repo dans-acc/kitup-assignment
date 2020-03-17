@@ -14,14 +14,14 @@ class UserForm(forms.ModelForm):
     # Define the forms target model and the fields included / excluded.
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password', 'confirm_password',)
+        fields = ('username', 'first_name', 'last_name', 'email', 'password', 'confirm_password')
 
     # We STILL need this function to check if passwords match. Refer to Django's form validation
     # Fixed it by adding the right clean_ prefix now.
     def clean_confirm_password(self):
         cd = self.cleaned_data
         if cd['confirm_password'] != cd['password']:
-            raise ValidationError("The passwords do not match!")
+            raise forms.ValidationError("The passwords do not match!")
 
         return cd['confirm_password']
 

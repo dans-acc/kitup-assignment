@@ -49,7 +49,7 @@ def user_register(request):
             # Now we hash the password with the set_password method.
             # Once hashed, we can update the user object.
             # Uses form validation to check that the set password matches
-            user.set_password(user.password) # Need to update later with the Forms API
+            user.set_password(user_reg.clean_confirm_password()) # Need to update later with the Forms API
             user.save()
             registered = True
         else:
