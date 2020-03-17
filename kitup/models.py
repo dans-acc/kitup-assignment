@@ -5,11 +5,18 @@ from django.contrib.auth.models import User
 # Fundamentally, the model extends the default User model implemented by django.
 class Profile(models.Model):
 
+    # Define constants for the user.
+    USER_USERNAME_MIN_LENGTH = 8
+    USER_USERNAME_MAX_LENGTH = 16
+
+    # Define the profile constants.
+    DEFAULT_RATING = 0
+
     # Additional user attributes.
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile_images')
-    age = models.IntegerField()
-    rating = models.IntegerField(default=0)
+    date_of_birth = models.DateField(null=False)
+    rating = models.IntegerField(default=DEFAULT_RATING)
     strikes = models.IntegerField(default=0)
 
     # Model meta data.
@@ -48,10 +55,7 @@ class Match(models.Model):
     name = models.CharField(max_length=NAME_MAX_LENGTH, null=False)
     match_owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
 
-    # THIS MIGHT GET REMOVED DUE TO US USING THE GOOGLE API!
-    match_photo = models.ImageField(upload_to='match_images')
-
-    # Match times.
+    # Match times i.e. start date and time, and time it finishes.
     start_datetime = models.DateTimeField(null=False)
     end_time = models.TimeField(auto_now=False)
 
