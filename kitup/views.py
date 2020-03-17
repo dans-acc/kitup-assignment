@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django import forms
 
 # The main page for the website.
 from kitup.forms import UserForm
@@ -47,7 +48,8 @@ def user_register(request):
 
             # Now we hash the password with the set_password method.
             # Once hashed, we can update the user object.
-            user.set_password(user.password)
+            # Uses form validation to check that the set password matches
+            user.set_password(user.password) # Need to update later with the Forms API
             user.save()
             registered = True
         else:
