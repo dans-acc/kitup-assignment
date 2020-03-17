@@ -16,6 +16,22 @@ class UserForm(forms.ModelForm):
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'password', 'confirm_password')
 
+        # Band aid fix for the 'required field text always showing'
+        help_texts = {
+            'username': '',
+        }
+
+    # Redefined the widgets in a 'non-redundant' way using the Form.fields attributes. This also helps us add CSS
+    # Stuff if we need in the future
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].widget.attrs.update({'class': 'form-control'})
+        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
+        self.fields['email'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password'].widget.attrs.update({'class': 'form-control'})
+        self.fields['confirm_password'].widget.attrs.update({'class': 'form-control'})
+
     # We STILL need this function to check if passwords match. Refer to Django's form validation
     # Fixed it by adding the right clean_ prefix now.
     def clean_confirm_password(self):
@@ -64,39 +80,4 @@ class ReportForm(forms.ModelForm):
         model = Report
         fields = ('reason',)
 
-'''
-
-This is not necessary; redundant.
-
-class UserRegistrationForm(forms.ModelForm):
-    First_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'required': 'true'}))
-    Last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'required': 'true'}))
-    Password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'required': 'true'}))
-    Confirm_Password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'required': 'true'}))
-
-    class Meta:
-        model = User
-        fields = ['username', 'email']
-
-        # The following lines integrate the CSS/Bootstrap4 implementation in register.html using widgets/attributes
-
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control', 'autofocus': 'true', 'required': 'true'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control', 'required': 'true'}),
-        }
-
-        # Band aid fix for the 'required field text always showing'
-        help_texts = {
-            'username': '',
-        }
-
-    # The following function checks for the user password for validation
-
-    def PassCheck(self):
-        cd = self.cleaned_data
-        if cd['Confirm_Password'] != cd['Password']:
-            raise ValidationError("The passwords do not match!")
-
-        return cd['Confirm_Password']
-'''
 
