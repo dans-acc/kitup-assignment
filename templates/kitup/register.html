@@ -1,5 +1,6 @@
 {% extends 'kitup/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 <!-- Override the title of the page. -->
 {% block title_block %}
@@ -15,9 +16,10 @@
 				<div class="card card-signin my-5">
 					<div class="card-body">
 						<h5 class="card-title text-center">Register</h5>
+							
 							<form id = "user_reg" method = "post" action="{% url 'kitup:register' %}" enctype="multipart/form-data">
 								{% csrf_token %}
-								{{ user_reg.as_p }}
+								{{ user_reg | crispy}}
 								<button class="btn btn-lg btn-success btn-block text-uppercase" type="submit">Sign Up</button>
 							</form>
 

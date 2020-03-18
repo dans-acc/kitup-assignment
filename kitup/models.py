@@ -90,7 +90,7 @@ class Player(models.Model):
 
     # Defines the name of the model.
     def __str__(self):
-        return user.username
+        return user.username 
 
 # Defines the model used to report other users.
 class Report(models.Model):

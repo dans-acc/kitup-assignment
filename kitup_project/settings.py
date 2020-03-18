@@ -65,8 +65,10 @@ MEDIA_ROOT = MEDIA_DIR
 # MEDIA_URL informs django the URL that should be served.
 MEDIA_URL = '/media/'
 
-# Application definition
+# The templates that are to be utilised by crispy_froms library.
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -76,6 +78,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'bootstrap4',
+    'crispy_forms',
 
     'kitup'
 ]

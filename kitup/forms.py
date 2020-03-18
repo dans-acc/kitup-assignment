@@ -6,59 +6,18 @@ from django.core.exceptions import ValidationError
 
 from kitup.models import User, Profile, Sport, Match, Player, Report
 
-
-'''
-class UserForm(forms.ModelForm):
-
-    # Overwrite the user models password field to hide it.
-    password = forms.CharField(widget=forms.PasswordInput())
-    confirm_password = forms.CharField(widget=forms.PasswordInput())
-
-    # Define the forms target model and the fields included / excluded.
-    class Meta:
-        model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password', 'confirm_password')
-
-        # Band aid fix for the 'required field text always showing'
-        help_texts = {
-            'username': '',
-        }
-
-    # Redefined the widgets in a 'non-redundant' way using the Form.fields attributes. This also helps us add CSS
-    # Stuff if we need in the future
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({'class': 'form-control'})
-        self.fields['first_name'].widget.attrs.update({'class': 'form-control'})
-        self.fields['last_name'].widget.attrs.update({'class': 'form-control'})
-        self.fields['email'].widget.attrs.update({'class': 'form-control'})
-        self.fields['password'].widget.attrs.update({'class': 'form-control'})
-        self.fields['confirm_password'].widget.attrs.update({'class': 'form-control'})
-
-    # We STILL need this function to check if passwords match. Refer to Django's form validation
-    # Fixed it by adding the right clean_ prefix now.
-    def clean_confirm_password(self):
-        cd = self.cleaned_data
-        if cd['confirm_password'] != cd['password']:
-            raise forms.ValidationError("The passwords do not match!")
-
-        return cd['confirm_password']
-
-'''
-
-
 # Form is used for the creation of djangos default User model.
 # Thus, this form should be used for the creation of the user and 
 # the associated profile.
 class UserForm(forms.ModelForm):
 
     # Overwrite the User models fields.
-    username = forms.CharField(min_length=Profile.USER_USERNAME_MIN_LENGTH, max_length=Profile.USER_USERNAME_MAX_LENGTH)
-    first_name = forms.CharField(help_text='Please provide your first name')
-    last_name = forms.CharField(help_text='Please provide the last name')
-    email = forms.EmailField(help_text='Please provide an email address')
-    password = forms.CharField(widget=forms.PasswordInput(), help_text='Please provide the password for the account.')
-    confirm_password = forms.CharField(widget=forms.PasswordInput(), help_text='Please confirm the password.')
+    username = forms.CharField(min_length=Profile.USER_USERNAME_MIN_LENGTH, max_length=Profile.USER_USERNAME_MAX_LENGTH, help_text='The name visible to other users of the site.')
+    first_name = forms.CharField(help_text='Your first name; not visible to users.')
+    last_name = forms.CharField(help_text='Your last name; not visible to users.')
+    email = forms.EmailField(help_text='A valid email address associated with the account.')
+    password = forms.CharField(widget=forms.PasswordInput(), help_text='Your account password - used for logging in.')
+    confirm_password = forms.CharField(widget=forms.PasswordInput(), help_text='Confirm your password.')
 
     # The meta data class, defines the model and fields.
     class Meta:
@@ -73,7 +32,6 @@ class UserForm(forms.ModelForm):
             raise forms.ValidationError("The passwords do not match!")
 
         return cd['confirm_password']
-
 
 # Form defines the necessary fields for creating a match.
 # Thus, this form should only be used when a match is being created or edited.
@@ -126,4 +84,14 @@ class ReportForm(forms.ModelForm):
         fields = ('reason',)
 
 # Defines a form that's to be used for logging in.
+class UserLoginForm(forms.Form):
+
+    # Profile the fields for logging in.
+    username = forms.CharField(required=True,max_length=30,help_text='Account username.')
+    password = forms.CharField(widget=forms.PasswordInput(), help_text='Account password.')
+
+    # Meta class defines the visible form fields.
+    class Meta:
+        fields = ('username', 'password')
+
 
