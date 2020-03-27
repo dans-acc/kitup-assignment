@@ -1,10 +1,10 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 # Profile defines the individual user's registered for the site.
 # Fundamentally, the model extends the default User model implemented by django.
 class Profile(models.Model):
-
     # Define constants for the user.
     USER_USERNAME_MIN_LENGTH = 8
     USER_USERNAME_MAX_LENGTH = 16
@@ -27,9 +27,9 @@ class Profile(models.Model):
     def __str__(self):
         return self.user.username
 
+
 # Model defines the type of sport that can be played.
 class Sport(models.Model):
-
     # Define sport model constants.
     NAME_MAX_LENGTH = 30
 
@@ -41,9 +41,9 @@ class Sport(models.Model):
     def __str__(self):
         return self.name
 
+
 # Model defines a match that has / is going to happened.
 class Match(models.Model):
-
     # Defines the Match models constants.
     NAME_MAX_LENGTH = 30
     DEFAULT_MIN_AGE = 16
@@ -76,9 +76,9 @@ class Match(models.Model):
     def __str__(self):
         return self.name
 
+
 # Defines a player within a match.
 class Player(models.Model):
-
     # The user and the match for which this entry exists.
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
@@ -90,18 +90,19 @@ class Player(models.Model):
 
     # Defines the name of the model.
     def __str__(self):
-        return user.username 
+        return user.username
 
-# Defines the model used to report other users.
+    # Defines the model used to report other users.
+
+
 class Report(models.Model):
-
     # Defines report models constants.
     REASON_MAX_LENGTH = 60
 
     # The user making the report, the user in question, and the reason for the report, respectively.
     reporting_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reporting_user')
     reported_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_user')
-    reason = models.CharField(max_length = REASON_MAX_LENGTH)
+    reason = models.CharField(max_length=REASON_MAX_LENGTH)
 
     # Report models meta data.
     class Meta:
@@ -110,6 +111,3 @@ class Report(models.Model):
     # A string representation of the report.
     def __str__(self):
         return self.report_id
-
-
-

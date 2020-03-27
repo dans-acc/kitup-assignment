@@ -12,7 +12,8 @@ from kitup.models import User, Profile, Sport, Match, Player, Report
 class UserForm(forms.ModelForm):
 
     # Overwrite the User models fields.
-    username = forms.CharField(min_length=Profile.USER_USERNAME_MIN_LENGTH, max_length=Profile.USER_USERNAME_MAX_LENGTH, help_text='The name visible to other users of the site.')
+    username = forms.CharField(min_length=Profile.USER_USERNAME_MIN_LENGTH, max_length=Profile.USER_USERNAME_MAX_LENGTH,
+                               help_text='The name visible to other users of the site.')
     first_name = forms.CharField(help_text='Your first name; not visible to users.')
     last_name = forms.CharField(help_text='Your last name; not visible to users.')
     email = forms.EmailField(help_text='A valid email address associated with the account.')
@@ -41,18 +42,22 @@ class MatchForm(forms.ModelForm):
     SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
 
     # Define the fields that are required in order to create a match.
-    sport = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='Please select the sport for which the match is being created.')
+    sport = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='Please select the sport for which the match is being '
+                                                                'created.')
     name = forms.CharField(max_length=Match.NAME_MAX_LENGTH, help_text='Please enter the name of the match.')
-    min_age = forms.IntegerField(initial=Match.DEFAULT_MIN_AGE, help_text='Please provide the minimum age a player can be in order to join the match.')
-    max_age = forms.IntegerField(initial=Match.DEFAULT_MAX_AGE, help_text='Please provide the maximum age a player can be in order to join the match.')
-    min_rating = forms.IntegerField(initial=Match.DEFAULT_MIN_RATING, help_text='Please provide the minimum rating a player must possess in order to join the match.')
-    team_home_score = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
-    team_away_score = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
+    min_age = forms.IntegerField(initial=Match.DEFAULT_MIN_AGE, help_text='Please provide the minimum age a player '
+                                                                          'can be in order to join the match.')
+    max_age = forms.IntegerField(initial=Match.DEFAULT_MAX_AGE, help_text='Please provide the maximum age a player '
+                                                                          'can be in order to join the match.')
+    min_rating = forms.IntegerField(initial=Match.DEFAULT_MIN_RATING, help_text='Please provide the minimum rating a '
+                                                                                'player must possess in order to join'
+                                                                                ' the match.')
 
     # Meta class defines the model and the fields that are to be displayed.
     class Meta:
         model = Match
         fields = ('sport', 'name', 'min_age', 'max_age', 'min_rating')
+
 
 # Form defines the necessary fields for creating a profile model.
 # Thus, this from should be used for the creation of the user in conjunction
