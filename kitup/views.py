@@ -107,7 +107,7 @@ def user_profile(request):
     pass
 
 # Permits the viewing of another players profile.
-def view_profile(request, user_id):
+def user_view_profile(request, user_id):
     pass
 
 # Permits the user to edit / alter their settings.
@@ -121,33 +121,39 @@ def user_report(request, reported_user_id):
     pass
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Permits the creation of a match.
 @login_required
 def match_create(request):
     pass
-
 
 # Enables the user to leave a match they're in.
 @login_required
 def match_leave(request, match_id):
     pass
 
-
-# Find a match based on the name.
-def match_find(request, match_name):
-    pass
-
-
-# View a given match based on the match id.
+# Accessed post match to rate the players within the game.
 def match_view(request, match_id):
     pass
 
-
 # Post view enables players to be ranked.
 @login_required
-def match_post(request, match_id):
+def match_rate(request, match_id):
     pass
-
 
 # Enables players to join teams for a given match
 @login_required

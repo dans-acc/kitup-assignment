@@ -5,8 +5,6 @@
 {% load bootstrap4 %}
 
 <html lang="en">
-
-<!-- Header for the HTML pages i.e. definitions and inclusions. -->
 <head>
 
 	<!-- Define the meta tags for the site. -->
@@ -24,9 +22,8 @@
 
 	<!-- Define the title of the page. -->
 	<title>KitUp - {% block title_block %}Welcome!{% endblock %}</title>
-</head>
 
-<!-- Body for the HTML pages i.e. content. -->
+</head>
 <body>
 
 	<!-- The navbar for the page i.e. the main navigation menu. -->
@@ -55,23 +52,23 @@
 
 						<!-- The user has been authenticated, they can view their profile, settings and logout. -->
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:profile' %}">Profile</a>
+							<a class="nav-link" href="{% url 'kitup:user_profile' %}">Profile</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:settings' %}">Settings</a>
+							<a class="nav-link" href="{% url 'kitup:user_settings' %}">Settings</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:logout' %}">Logout</a>
+							<a class="nav-link" href="{% url 'kitup:user_logout' %}">Logout</a>
 						</li>
 
 					{% else %}
 
 						<!-- The user has not been authenticated, they must log in. -->
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:login' %}">Login</a>
+							<a class="nav-link" href="{% url 'kitup:user_login' %}">Login</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:register' %}">Register</a>
+							<a class="nav-link" href="{% url 'kitup:user_register' %}">Register</a>
 						</li>
 
 					{% endif %}
@@ -85,19 +82,8 @@
 	{% block content_block %}
 	{% endblock %}
 
-	<!-- Footer used for displaying the copyright notice and other links. -->
-	<footer class="py-3 bg-dark kitup-sticky-footer">
-		<div class="container">
-			<p class="m-0 text-center text-white">Copyright &copy; KitUp 2020 - University of Glasgow</p>
-		</div>
-	</footer>
-
 	<!-- Include bootstrap4 JS. -->
 	{% bootstrap_javascript jquery="full" %}
-
-	<!-- Include JS / JQuery plugins. -->
-
-	<!-- Include custom JS / JQuery. -->
 
 </body>
 </html>
