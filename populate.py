@@ -1,5 +1,7 @@
 import os
 
+from django.contrib.auth.models import User
+
 os.environ.setdefault('DJANGO_SETTINGS_MODULE',
                       'kitup_project.settings')
 
@@ -7,7 +9,7 @@ import django
 
 django.setup()
 
-from kitup.models import Users, Player, Match, Sport, Report
+from kitup.models import Profile, Player, Match, Sport, Report
 
 # Password hashing
 import bcrypt
@@ -18,8 +20,7 @@ def populate():
     pass2 = b'vailjevs'
     pass3 = b'shehabi'
 
-
-    users = [
+    profiles = [
         {'forename': 'James',
          'surname': 'simpson',
          'password': bcrypt.hashpw(password=pass1, salt=bcrypt.gensalt()),
@@ -70,8 +71,8 @@ def populate():
          'reason': 'An Asshole'}
     ]
 
-    for user in users:
-        u = add_user(user)
+    for profile in profiles:
+        u = add_profile(profile)
     for sport in sports:
         s = add_sport(sport)
     for match in matches:
@@ -82,12 +83,12 @@ def populate():
         r = add_report(report)
 
 
-def add_user(user):
-    print(user)
-    u = Users.objects.get_or_create(forename=user['forename'],
-                                    surname=user['surname'],
-                                    password=user['password'],
-                                    age=user['age'])[0]
+def add_profile(profile):
+    print(profile)
+    User.objects.create_user(profile['forename'],
+                             profile['surname'],
+                             profile['password'])
+    u = Profile.objects.get_or_create(age=profile['age'])[0]
     u.save()
     return u
 
@@ -111,7 +112,7 @@ def add_player(player):
 
 
 def add_report(report):
-    r = Report.obkects.get_or_create(report=report)[0]
+    r = Report.objects.get_or_create(report=report)[0]
     r.save()
     return r
 
