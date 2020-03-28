@@ -7,11 +7,13 @@ from django import forms
 # The main page for the website.
 from kitup.forms import UserForm, ProfileForm, UserLoginForm
 
+
 # The main index / home page for the website.
 def index(request):
     context_dictionary = {}
     response = render(request, 'kitup/index.html', context_dictionary)
     return response
+
 
 # Invoked when the user wishes to register for the site.
 def user_register(request):
@@ -57,6 +59,7 @@ def user_register(request):
         {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
     return response
 
+
 # Invoked when the user wishes to log into the site using their credentials.
 def user_login(request):
 
@@ -91,29 +94,36 @@ def user_login(request):
     response = render(request, 'kitup/login.html', {'user_login_form': user_login_form})
     return response
 
+
 # Invoked in the event the user wishes to log out.
 @login_required
 def user_logout(request):
     logout(request)
     return redirect(reverse('kitup:index'))
 
+
 # Used to recover the credentials of the user.
 def user_recover(request):
     pass
 
 # View the profile of the user. Displays current matches etc.
-@login_required(login_url='kitup:login')
+#@login_required(login_url='kitup:login')
 def user_profile(request):
-    pass
+    context_dictionary = {}
+    response = render(request, 'kitup/user_profile.html', context_dictionary)
+    return response
+
 
 # Permits the viewing of another players profile.
 def user_view_profile(request, user_id):
     pass
 
+
 # Permits the user to edit / alter their settings.
 @login_required
 def user_settings(request):
     pass
+
 
 # Permits the user to report another user.
 @login_required
