@@ -1,0 +1,85 @@
+{% extends 'kitup/base.html' %}
+{% load bootstrap4 %}
+
+<!-- Overwrite the title of the page. -->
+{% block title_block %}
+Viewing Match
+{% endblock %}
+
+<!-- Overwrite the opening body tag. -->
+{% block body_opening_tag %}
+<body class=".kitup-padding-top-56px">
+{% endblock %}
+
+<!-- Overwrite the content block - display the match content. -->
+{% block content_block %}
+
+<!-- The page content. -->
+<div class="container">
+	
+	<!-- Define the header row - the location, options and information. -->
+	<div class="row align-items-center my-5">
+
+		<!-- Google maps displays the location of the match. -->
+		<div class="col-lg-7">
+			<img class="img-fluid rounded mb-4 mb-lg-0" src="http://placehold.it/900x400" alt="">
+		</div>
+
+		<!-- Display information and options about the match. -->
+		<div class="col-lg-5">
+
+			<!-- General information about the match. -->
+			<h1 class="font-weight-light">Daniels' Mad Gathering!</h1>
+			<dl class="row">
+				<dt class="font-weight-light col-sm-3">Sport:</dt>
+				<dd class="col-sm-9">Football</dd>
+				<dt class="font-weight-light col-sm-3">Date:</dt>
+				<dd class="col-sm-9">June, 6 10:20 until 11:20</dd>
+				<dt class="font-weight-light col-sm-3">Location:</dt>
+				<dd class="col-sm-9">35 Middleton Park, Brechin.</dd>
+				<dt class="font-weight-light col-sm-3">Ages:</dt>
+				<dd class="col-sm-9">16+</dd>
+				<dt class="font-weight-light col-sm-3">Min. Rating:</dt>
+				<dd class="col-sm-9">1430</dd>
+			</dl>
+
+			<!-- The match button options. -->
+			<a class="btn btn-success" href="#" role="button">Requests</a>
+			<a class="btn btn-dark" href="#" role="button">Edit</a>
+			<a class="btn btn-dark" href="#" role="button">Disband</a>
+
+		</div>
+	</div>
+
+	<!-- Display the players that have already joined the match. -->
+	<hr>
+
+	<!-- Displays the players that are participating in the match. -->
+	<div class="row my-5">
+		<div class="col-lg-12 text-center">
+			<h3 class="font-weight-light">Match Participants</h3>
+		</div>
+	</div>
+
+	<!-- Displays the individual players that are participating in the event. -->
+	<div class="row text-center">
+		
+		<!-- Define the card that's utilised for the addition of new players. -->
+		<div class="col-lg-3 col-md-6 mb-4">
+			<div class="card h-100">
+				<img class="card-img-top" src="http://placehold.it/500x325">
+				<div class="card-body">
+					<h5 class="card-title font-weight-light">Invite Players!</h5>
+					<p class="card-text">Start playing by inviting your friends.</p>
+				</div>
+				<div class="card-footer">
+					<a class="btn btn-success" href="#" role="button">Invite Player</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+</div>
+
+{% endblock %}
