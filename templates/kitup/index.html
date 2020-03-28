@@ -41,23 +41,49 @@
 		</div>
 	</div>
 
+	<!-- Search bar is used to find matches by specific names. -->
+	<form class="my-4" action="">
+		<div class="input-group mb-4">
+			<input type="search" placeholder="Search for public and private matches" aria-describedby="match-search-btn" class="form-control">
+			<div class="input-group-append">
+				<button id="match-search-btn" type="submit" class="btn btn-success"><i class="fa fa-search"></i></button>
+			</div>
+		</div>
+	</form>
+
 	<!-- Display the public matches. -->
-	<div class="row my-4">
+	<div class="row my-5">
 
 		<!-- Define the card that's utilised for the addition of new players. -->
 		<div class="col-lg-4 col-md-6 mb-4">
 			<div class="card h-100">
 				<img class="card-img-top" src="http://placehold.it/500x325">
+				
+				<!-- Define the match description. -->
 				<div class="card-body">
-					<h5 class="card-title font-weight-light">Invite Friends!</h5>
-					<p class="card-text">Start playing by inviting your friends.</p>
+					
+					<!-- The name of the match. -->
+					<h4 class="card-title font-weight-light text-center">Game Name</h4>
+
+					<!-- General Description of match. -->
+					<dl class="row card-text">
+						<dt class="font-weight-light col-sm-4">Sport:</dt>
+						<dd class="col-sm-8">Football</dd>
+						<dt class="font-weight-light col-sm-4">Date:</dt>
+						<dd class="col-sm-8">June, 6 10:20 until 11:20</dd>
+						<dt class="font-weight-light col-sm-4">Location:</dt>
+						<dd class="col-sm-8">35 Middleton Park, Brechin.</dd>
+					</dl>
 				</div>
-				<div class="card-footer">
-					<a class="btn btn-success" href="#" role="button">Invite Player</a>
+
+				<!-- Options for joining or leaving the match. -->
+				<div class="card-footer text-center">
+					<a class="btn btn-success mr-2" href="#" role="button">Join Match</a>
+					<a class="btn btn-dark" href="#" role="button">View Details</a>
 				</div>
+
 			</div>
 		</div>
-
 	</div>
 
 	<hr>
