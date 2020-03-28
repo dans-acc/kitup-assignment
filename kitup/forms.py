@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 
 from kitup.models import User, Profile, Sport, Match, Player, Report
 
+
 # Form is used for the creation of djangos default User model.
 # Thus, this form should be used for the creation of the user and 
 # the associated profile.
@@ -33,6 +34,7 @@ class UserForm(forms.ModelForm):
             raise forms.ValidationError("The passwords do not match!")
 
         return cd['confirm_password']
+
 
 # Form defines the necessary fields for creating a match.
 # Thus, this form should only be used when a match is being created or edited.
@@ -75,6 +77,7 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ('date_of_birth', 'profile_picture',)
 
+
 # Form defines necessary fields required in order to create a report model.
 # The from and to fields will be hidden given that they are extrapolated
 # within the user_report view.
@@ -87,6 +90,7 @@ class ReportForm(forms.ModelForm):
     class Meta:
         model = Report
         fields = ('reason',)
+
 
 # Defines a form that's to be used for logging in.
 class UserLoginForm(forms.Form):
