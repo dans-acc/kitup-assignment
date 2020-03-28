@@ -8,4 +8,60 @@
 
 <!-- Override the content block for the page. -->
 {% block content_block %}
+
+<!-- Define the index page content. -->
+<div class="container">
+
+	<!-- Defines the jumbotron for the page. -->
+	<div class="row mt-5">
+		<div class="col jumbotron">
+
+			<!-- Define the heading for the page. -->
+			<h1 class="display-4">KitUp Now!</h1>
+			<h2 class="load font-weight-light">Kit-up to jump into games nearby, now.</h2>
+
+			<!-- Split the jumbotron. -->
+			<hr class="my-4">
+			
+			<!-- Display options for the user. -->
+			<p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+			<p class="lead">
+				<a class="btn btn-success btn-lg mr-2" href="#" role="button">Join Now</a>
+				<a class="btn btn-dark btn-lg" href="#" role="button">Learn more</a>
+			</p>
+
+		</div>
+	</div>
+
+	<!-- Display the heading for the index page. -->
+	<div class="row">
+		<div class="col-lg-12 text-center">
+			<h2 class="font-weight-light">Public Matches</h2>
+			<h5 class="font-weight-light text-muted">Find Matches Nearby</h5>
+		</div>
+	</div>
+
+	<!-- Display the public matches. -->
+	<div class="row my-4">
+
+		<!-- Define the card that's utilised for the addition of new players. -->
+		<div class="col-lg-4 col-md-6 mb-4">
+			<div class="card h-100">
+				<img class="card-img-top" src="http://placehold.it/500x325">
+				<div class="card-body">
+					<h5 class="card-title font-weight-light">Invite Friends!</h5>
+					<p class="card-text">Start playing by inviting your friends.</p>
+				</div>
+				<div class="card-footer">
+					<a class="btn btn-success" href="#" role="button">Invite Player</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<hr>
+
+</div>
+
 {% endblock %}
