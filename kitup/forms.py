@@ -36,29 +36,39 @@ class UserForm(forms.ModelForm):
         return cd['confirm_password']
 
 
-# Form defines the necessary fields for creating a match.
-# Thus, this form should only be used when a match is being created or edited.
+
+
+
+
+
+
+
+
+
+# MatchForm permits the creation of the Match model.
 class MatchForm(forms.ModelForm):
 
-    # Query the sports, permits the user to choose from a variety.
+    # The sports from which to select.
     SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
 
-    # Define the fields that are required in order to create a match.
-    sport = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='Please select the sport for which the match is being '
-                                                                'created.')
-    name = forms.CharField(max_length=Match.NAME_MAX_LENGTH, help_text='Please enter the name of the match.')
-    min_age = forms.IntegerField(initial=Match.DEFAULT_MIN_AGE, help_text='Please provide the minimum age a player '
-                                                                          'can be in order to join the match.')
-    max_age = forms.IntegerField(initial=Match.DEFAULT_MAX_AGE, help_text='Please provide the maximum age a player '
-                                                                          'can be in order to join the match.')
-    min_rating = forms.IntegerField(initial=Match.DEFAULT_MIN_RATING, help_text='Please provide the minimum rating a '
-                                                                                'player must possess in order to join'
-                                                                                ' the match.')
+    # The necessary fields that are used to create the match.
+    sport = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='The sport for which the match is being held.')
+    name = forms.CharField(max_length=Match.NAME_MAX_LENGTH, help_text='The name of the match.')
+    min_age = forms.IntegerField(initial=Match.DEFAULT_MIN_AGE, help_text='Minimum participating age.')
+    max_age = forms.IntegerField(initial=Match.DEFAULT_MAX_AGE, help_text='Maximum participating age.')
+    min_rating = forms.IntegerField(initial=Match.DEFAULT_MIN_RATING, help_text='The minimum rating of an attendee.')
 
     # Meta class defines the model and the fields that are to be displayed.
     class Meta:
         model = Match
         fields = ('sport', 'name', 'min_age', 'max_age', 'min_rating')
+
+
+
+
+
+
+
 
 
 # Form defines the necessary fields for creating a profile model.

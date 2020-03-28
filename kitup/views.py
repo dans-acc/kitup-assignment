@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 
 # The main page for the website.
-from kitup.forms import UserForm, ProfileForm, UserLoginForm
+from kitup.forms import UserForm, MatchForm, ProfileForm, UserLoginForm
 
 
 # The main index / home page for the website.
@@ -141,18 +141,17 @@ def user_report(request, reported_user_id):
 
 
 
-
-
-
-
-
-# Permits the creation of a match.
-
-
-
-@login_required
+# The match creation form.
 def match_create(request):
-    pass
+    match_create_form = MatchForm()
+    cd = {'match_creation_form': match_create_form}
+    response = render(request, 'kitup/match_create.html', cd)
+    return response
+
+
+
+
+
 
 # Enables the user to leave a match they're in.
 @login_required
