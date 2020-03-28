@@ -1,21 +1,26 @@
 {% extends 'kitup/base.html' %}
 {% load static %}
 
+
+
 <!-- Override the title of the page. -->
 {% block title_block %}
     Profile!
+
+
 {% endblock %}
 
 {% block content_block %}
+<link rel="stylesheet" type="text/css" href="{% static 'kitup/css/profile.css' %}">
     <br>
     <br>
     <div class="col-md-12 row my-lg-5">
         <div class="col-md-4">
             <div class="portlet light profile-sidebar-portlet bordered">
                 <div class="profile-userpic">
-                    <img src="{{user_image}}" class="img-responsive" alt="">help </div>
+                    <img src="../../media/default_profile_photo.png" class="img-responsive" alt=""></div>
                 <div class="profile-usertitle">
-                    <div class="profile-usertitle-name"> {{name}} </div>
+                    <div class="profile-usertitle-name"> James Simpson </div>
                 </div>
                 <div class="profile-userbuttons">
                     <button type="button" class="btn btn-info  btn-sm">Report</button>
@@ -44,7 +49,11 @@
                             <div role="tabpanel" class="tab-pane active" id="settings">
                                 <form>
                                     <div class="form-group">
-                                        <label for="inputName">Name</label>
+                                        <label for="inputUserName">User Name</label>
+                                        <input type="text" class="form-control" id="inputUserName" placeholder="User Name">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="inputName">First Name</label>
                                         <input type="text" class="form-control" id="inputName" placeholder="Name">
                                     </div>
                                     <div class="form-group">
@@ -59,7 +68,7 @@
                                         <label for="exampleInputPassword1">Password</label>
                                         <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
                                     </div>
-                                    <button type="submit" class="btn btn-default">Submit</button>
+                                    <button type="submit" class="btn btn-info  btn-sm">Submit</button>
                                 </form>
                             </div>
                             <div role="tabpanel" class="tab-pane" id="overview">Profile></div>
