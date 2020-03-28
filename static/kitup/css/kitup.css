@@ -6,6 +6,11 @@
 	height: auto;
 }
 
+/* Defines a custom padding top attribute. */
+.kitup-padding-top-56px {
+	padding-top: 56px;
+}
+
 body {
-  height: 100%;
+  padding-top: 56px;
 }

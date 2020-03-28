@@ -137,6 +137,9 @@ def user_report(request, reported_user_id):
 
 
 # Permits the creation of a match.
+
+
+
 @login_required
 def match_create(request):
     pass
@@ -148,7 +151,8 @@ def match_leave(request, match_id):
 
 # Accessed post match to rate the players within the game.
 def match_view(request, match_id):
-    pass
+    response = render(request, 'kitup/match_view.html')
+    return response
 
 # Post view enables players to be ranked.
 @login_required

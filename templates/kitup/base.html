@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <!-- Load static files, bootstrap etc. -->
-{% load static %}
+{% load staticfiles %}
 {% load bootstrap4 %}
 
 <html lang="en">
@@ -24,7 +24,11 @@
 	<title>KitUp - {% block title_block %}Welcome!{% endblock %}</title>
 
 </head>
+
+<!-- Permits the body tag to be changed.  -->
+{% block body_opening_tag %}
 <body>
+{% endblock %}
 
 	<!-- The navbar for the page i.e. the main navigation menu. -->
 	<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
