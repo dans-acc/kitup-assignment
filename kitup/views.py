@@ -145,6 +145,7 @@ def user_report(request, reported_user_id):
 
 
 # The match creation form.
+@login_required
 def match_create(request):
     match_create_form = MatchForm()
     cd = {'match_creation_form': match_create_form}

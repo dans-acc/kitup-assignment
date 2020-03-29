@@ -17,24 +17,50 @@
 		<div class="col jumbotron">
 
 			<!-- Define the heading for the page. -->
-			<h1 class="display-4">KitUp Now!</h1>
-			<h2 class="load font-weight-light">Kit-up to jump into games nearby, now.</h2>
+			<h1 class="display-4">
+				{% if user.is_authenticated %}
+					KitUp
+				{% else %}
+					KitUp Now!
+				{% endif %}
+			</h1>
+			<h2 class="load font-weight-light">
+				{% if user.is_authenticated %}
+					Hello, {{ user.username }}! Are you Ready?
+				{% else %}
+					A world of sports on your doorstep!
+				{% endif %}
+			</h2>
 
 			<!-- Split the jumbotron. -->
 			<hr class="my-4">
 			
-			<!-- Display options for the user. -->
-			<p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+			<!-- Display the appropriate messages in the jumbotron. -->
+			<p>
+				{% if user.is_authenticated %}
+					Create or select a match in order to get started!
+				{% else %}
+					Register now in order to participate in a wide array of matches nearby, today! Alternatively, click the 'Learn More' button for a brief overview of the site and instructions on how to get started.
+				{% endif %}
+			</p>
+
+			<!-- Display the appropriate buttons depending on whether or not the user 
+			is authenticated. -->
 			<p class="lead">
-				<a class="btn btn-success btn-lg mr-2" href="#" role="button">Join Now</a>
-				<a class="btn btn-dark btn-lg" href="#" role="button">Learn more</a>
+				{% if user.is_authenticated %}
+					<a class="btn btn-success btn-lg mr-2" href="{% url 'kitup:match_create' %}" role="button">Create Match</a>
+					<a class="btn btn-dark btn-lg" href="#public_matches" role="button">Join Match</a>
+				{% else %}
+					<a class="btn btn-success btn-lg mr-2" href="{% url 'kitup:user_register' %}" role="button">Register Now</a>
+					<a class="btn btn-dark btn-lg" href="#" role="button">Learn more</a>
+				{% endif %}
 			</p>
 
 		</div>
 	</div>
 
 	<!-- Display the heading for the index page. -->
-	<div class="row">
+	<div id="public_matches" class="row">
 		<div class="col-lg-12 text-center">
 			<h2 class="font-weight-light">Public Matches</h2>
 			<h5 class="font-weight-light text-muted">Find Matches Nearby</h5>
