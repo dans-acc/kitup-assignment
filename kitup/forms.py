@@ -70,7 +70,6 @@ class MatchForm(forms.ModelForm):
 
 
 
-
 # Form defines the necessary fields for creating a profile model.
 # Thus, this from should be used for the creation of the user in conjunction
 # with the UserForm form.
