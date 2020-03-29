@@ -30,6 +30,7 @@ from kitup import views as kitup_app_views
 # handled by the appropriate apps 'urls.py' module.
 # This is achieved by the include function.
 urlpatterns = [
-    path('', include('kitup.urls')),
+    path('', include('kitup.urls', namespace='kitup')),
     path('admin/', admin.site.urls),
+    path('social-auth/', include('social_django.urls', namespace="social")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
