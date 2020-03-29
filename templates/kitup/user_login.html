@@ -2,6 +2,11 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+<!-- Required CSS Files -->
+{% block css_block %}
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+{% endblock %}
+
 <!-- Override the title of the page. -->
 {% block title_block %}
 	Login!
@@ -20,9 +25,11 @@
 			<h1 class="font-weight-light">Login</h1><br>
 			<h3 class="font-weight-light text-muted">Sign in to join matches or create your own!</h3>
 		</div>
+	</div>
 
 	<!-- Separate the form from the title. -->
 	<hr class="my-4">
+	<div class="row">
 		<div class="card card-signin col-lg-12 mx-auto my-5">
 			<div class="card-body">
 				<form id = "user_login_form" method = "post" action="{% url 'kitup:user_login' %}" enctype="multipart/form-data">
@@ -51,8 +58,40 @@
 					</div>
 
 				</form>
+
+				<!-- Divide our form with the social media APIs. -->
+				<hr class="my-3">
+
+				<div class="row my-4">
+					<div class="col text-center">
+						<h5 class="font-weight-light">Sign in using your social media account</h5>
+					</div>
+				</div>
+
+				<!-- Defines the buttons for logging in with facebook. -->
+				<div class="row my-3">
+					<div class="col text-center">
+						<a class="btn btn-primary btn-lg w-100" href="#"><i class="fa fa-facebook"></i>&nbsp; Facebook</a>
+					</div>
+				</div>
+
+				<!-- Defines the button link that is reponsible for registering with instagram. -->
+				<div class="row my-3">
+					<div class="col text-center">
+						<a class="btn btn-dark btn-lg w-100" href="#"><i class="fa fa-instagram"></i>&nbsp; Instagram</a>
+					</div>
+				</div>
+
+				<!-- Defines the button link that is responsible for signing up with google. -->
+				<div class="row my-3">
+					<div class="col text-center">
+						<a class="btn btn-danger btn-lg w-100" href="#"><i class="fa fa-google"></i>&nbsp; Google</a>
+					</div>
+				</div>
+
 			</div>
 		</div>
+	</div>
 </div>
 
 
