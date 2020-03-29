@@ -103,7 +103,22 @@ class ProfileForm(forms.ModelForm):
 
     # Form fields required in order to create a profile.
     profile_picture = forms.ImageField(help_text='Please provide a profile picture.')
-    date_of_birth = forms.DateField(initial=datetime.date.today, help_text='Please specify your date of birth.')
+    date_of_birth = forms.DateField(
+        widget=tdWidgets.DatePicker(
+            options={
+                'useCurrent': True,
+                'collapse': False,
+            },
+            attrs={
+                'append': 'fa fa-calendar',
+                'icon_toggle': True,
+            }
+        ),
+        initial=datetime.date.today, 
+        help_text='Please specify your date of birth.'
+    )
+
+    # Hidden fields that are used for internal purposes.
     rating = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     strikes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
 
@@ -111,6 +126,15 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('date_of_birth', 'profile_picture',)
+
+
+
+
+
+
+
+
+
 
 
 # Form defines necessary fields required in order to create a report model.

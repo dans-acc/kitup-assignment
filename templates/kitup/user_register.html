@@ -2,6 +2,20 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
+<!-- Required for the time / date pickers to function; relied upon by tempus Dominus -->
+{% block css_block %}
+<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
+{% endblock %}
+
+<!-- Required for the time / date pickers to function; relied upon by tempus Dominus -->
+{% block js_block %}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+{{ form.media }}
+{% endblock %}
+
 <!-- Override the title of the page. -->
 {% block title_block %}
 	Register
@@ -27,26 +41,55 @@
 				<form id = "user_form" method = "post" action="{% url 'kitup:user_register' %}" enctype="multipart/form-data">
 
 					{% csrf_token %}
+
+					<!-- Defines the user name field. -->
 					<div class="row my-3">
 						<div class="col"> {{ user_form.username | as_crispy_field }} </div>
 					</div>
 
+					<!-- Displays the first and last name attributes that are necessary to be filled in. -->
 					<div class="row my-3">
 						<div class="col"> {{ user_form.first_name | as_crispy_field }} </div>
 						<div class="col"> {{ user_form.last_name | as_crispy_field }} </div>
 					</div>
 
+					<!-- Displays the necessary fields for email confirmation. -->
 					<div class="row my-3">
 						<div class="col"> {{ user_form.email | as_crispy_field }} </div>
 						<div class="col"> {{ user_form.email | as_crispy_field }} </div>
 					</div>
 
+					<!-- Displays the password fields. -->
 					<div class="row my-3">
 						<div class="col"> {{ user_form.password | as_crispy_field }} </div>
 						<div class="col"> {{ user_form.confirm_password | as_crispy_field }} </div>
 					</div>
 
-					<button class="btn btn-lg btn-success btn-block" type="submit">Sign Up</button>
+					<!-- Displays the field for selecting the date of birth. -->
+					<div class="row my-3">
+						<div class="col-6"> {{ profile_form.date_of_birth | as_crispy_field }} </div>
+					</div>
+
+					<!-- Defines the profile picture. -->
+					<div class="row my-3">
+						<div class="col"> {{ profile_form.profile_picture | as_crispy_field}} </div>
+					</div>
+
+
+					<!-- Display the sign in option. -->
+					<div class="row text-center">
+						<button class="col btn btn-lg btn-success btn-block" type="submit">Sign Up</button>
+					</div>
+
+					<!-- Display the already have an account link - takes you to the login 
+					page. -->
+					<div class="row my-3 text-center">
+						<a class="col" href="">Already have an account?</a>
+					</div>
+
+					<!-- Divide our form with the social media APIs. -->
+					<hr class="my-3">
+
 
 				</form>
 			</div>
