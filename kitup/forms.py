@@ -21,13 +21,14 @@ class UserForm(forms.ModelForm):
     first_name = forms.CharField(help_text='Your first name; not visible to users.')
     last_name = forms.CharField(help_text='Your last name; not visible to users.')
     email = forms.EmailField(help_text='A valid email address associated with the account.')
+    confirm_email = forms.EmailField(help_text='Confirm your email address.')
     password = forms.CharField(widget=forms.PasswordInput(), help_text='Your account password - used for logging in.')
     confirm_password = forms.CharField(widget=forms.PasswordInput(), help_text='Confirm your password.')
 
     # The meta data class, defines the model and fields.
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password', 'confirm_password')
+        fields = ('username', 'first_name', 'last_name', 'email', 'confirm_email', 'password', 'confirm_password')
 
     # We STILL need this function to check if passwords match. Refer to Django's form validation
     # Fixed it by adding the right clean_ prefix now.
@@ -38,14 +39,16 @@ class UserForm(forms.ModelForm):
 
         return cd['confirm_password']
 
+    # Verifies if the email addresses provided match or not.
+    def clean(self):
+        cleaned_data = super(UserForm, self).clean()
+        email = cleaned_data.get('email')
+        confirm_email = cleaned_data.get('confirm_email')
 
-
-
-
-
-
-
-# Might need to implement address
+        if email and confirm_email:
+            if email != confirm_email:
+                raise forms.ValidationError("The emails do not match!")
+        return cleaned_data
 
 
 # MatchForm permits the creation of the Match model.

@@ -56,7 +56,7 @@
 					<!-- Displays the necessary fields for email confirmation. -->
 					<div class="row my-3">
 						<div class="col"> {{ user_form.email | as_crispy_field }} </div>
-						<div class="col"> {{ user_form.email | as_crispy_field }} </div>
+						<div class="col"> {{ user_form.confirm_email | as_crispy_field }} </div>
 					</div>
 
 					<!-- Displays the password fields. -->
@@ -84,7 +84,7 @@
 					<!-- Display the already have an account link - takes you to the login 
 					page. -->
 					<div class="row my-3 text-center">
-						<a class="col" href="">Already have an account?</a>
+						<a class="col" href="{% url 'kitup:user_login' %}">Already have an account?</a>
 					</div>
 
 					<!-- Divide our form with the social media APIs. -->

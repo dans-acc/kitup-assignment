@@ -29,11 +29,12 @@ def user_register(request):
         profile_form = ProfileForm(request.POST)
 
         # Check that the forms are in fact valid.
-        if user_form.is_valid and profile_form.is_valid:
+        if user_form.is_valid() and profile_form.is_valid():
 
             # Save the user model to the database.
             user = user_form.save()
-            user.settings(user.password)
+            user.set_password(user_form.cleaned_data['password'])
+            user.set_email(user_form.cleaned_data)
             user.save()
 
             # Save the profile form.
