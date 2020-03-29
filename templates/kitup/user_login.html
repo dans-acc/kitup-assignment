@@ -10,36 +10,53 @@
 <!-- Override the content block for the page. -->
 {% block content_block %}
 
-	<!--
-	<div class="container d-flex min-vh-100">
-		<div class="row justify-content-center align-self-center">
-			<div class="card card-signin my-5">
-					<div class="card-body">
-						<h5 class="card-title text-center">Login</h5>
-						<form class="form-signin">
-							
-							{% csrf_token %}
-							{{ user_login_form | crispy}}
 
-						
-							<button class="btn btn-lg btn-success btn-block text-uppercase" type="submit">Sign in</button>
-							
-							<a href="">Forgotten your password?</a>
-							<a href="">Don't have an account?</a>
+<!-- Define the body of the registration page. -->
+<div class="container mx-auto my-4">
 
-
-							<hr class="my-4">
-							<button class="btn btn-lg btn-google btn-block text-uppercase" type="submit"><i class="fab fa-google mr-2"></i> Sign in with Google</button>
-							<button class="btn btn-lg btn-facebook btn-block text-uppercase" type="submit"><i class="fab fa-facebook-f mr-2"></i> Sign in with Facebook</button>
-
-						</form>
-					</div>
-				</div>
+	<!-- Define the heading for the page. -->
+	<div class="row">
+		<div class="col-lg-12 text-center">
+			<h1 class="font-weight-light">Login</h1><br>
+			<h3 class="font-weight-light text-muted">Sign in to join matches or create your own!</h3>
 		</div>
-	</div>
--->
 
-<!-- The container holding the login box. -->
+	<!-- Separate the form from the title. -->
+	<hr class="my-4">
+		<div class="card card-signin col-lg-12 mx-auto my-5">
+			<div class="card-body">
+				<form id = "user_login_form" method = "post" action="{% url 'kitup:user_login' %}" enctype="multipart/form-data">
+
+					{% csrf_token %}
+					<div class="row my-3">
+						<div class="col"> {{ user_login_form.username | as_crispy_field }} </div>
+					</div>
+
+					<div class="row my-3">
+						<div class="col"> {{ user_login_form.password | as_crispy_field }} </div>
+					</div>
+
+					<button class="btn btn-lg btn-success btn-block" type="submit">Login</button>
+
+					<div class="row my-3">
+						<div class="col text-center">
+							<a href="">Forgotten your password?</a>
+						</div>
+					</div>
+
+					<div class="row my-3">
+						<div class="col text-center">
+							<a href="{% url 'kitup:user_register' %}">Don't have an account?</a>
+						</div>
+					</div>
+
+				</form>
+			</div>
+		</div>
+</div>
+
+
+<!--
 <div class="container d-flex min-vh-100">
 	<div class="row justify-content-center align-self-center">
         <div class="card card-signin my-5">
@@ -65,6 +82,6 @@
 		</div>
     </div>
 </div>
-	
+-->
 
 {% endblock %}
