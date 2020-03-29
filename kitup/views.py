@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 
 # The main page for the website.
-from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm
+from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm
 
 
 # The main index / home page for the website.
@@ -110,6 +110,8 @@ def user_recover(request):
 #@login_required(login_url='kitup:login')
 def user_profile(request):
     context_dictionary = {}
+    context_dictionary['user_update_form'] = UserUpdateForm
+
     response = render(request, 'kitup/user_profile.html', context_dictionary)
     return response
 
