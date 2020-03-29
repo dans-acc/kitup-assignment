@@ -4,6 +4,9 @@ from django import forms
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 
+from tempus_dominus import widgets as tdWidgets
+from django.contrib.admin import widgets as adminWidgets
+
 from kitup.models import User, Profile, Sport, Match, Player, Report
 
 
@@ -49,11 +52,34 @@ class UserForm(forms.ModelForm):
 class MatchForm(forms.ModelForm):
 
     # The sports from which to select.
-    SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
+    #SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
 
     # The necessary fields that are used to create the match.
-    sport = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='The sport for which the match is being held.')
+    sport = forms.ChoiceField(help_text='The sport for which the match is being held.')
     name = forms.CharField(max_length=Match.NAME_MAX_LENGTH, help_text='The name of the match.')
+
+    # Match when and where fields, respectively - time and address. 
+    start_datetime = forms.DateTimeField(
+        widget=tdWidgets.DateTimePicker(
+            options={
+                'useCurrent': True,
+                'collapse': False,
+            },
+            attrs={
+                'append': 'fa fa-calendar',
+                'icon_toggle': True,
+            }
+        ),
+        help_text='Start date and time of the match.'
+    )
+    end_time = forms.TimeField(
+        widget=tdWidgets.TimePicker(
+            attrs={'input_toggle': True, 'input_group': False,}
+        ),
+        help_text='The time at which the match is expected to end.'
+    )
+
+    # Match participant restriction fields - age and ranking limitations.
     min_age = forms.IntegerField(initial=Match.DEFAULT_MIN_AGE, help_text='Minimum participating age.')
     max_age = forms.IntegerField(initial=Match.DEFAULT_MAX_AGE, help_text='Maximum participating age.')
     min_rating = forms.IntegerField(initial=Match.DEFAULT_MIN_RATING, help_text='The minimum rating of an attendee.')
@@ -61,7 +87,7 @@ class MatchForm(forms.ModelForm):
     # Meta class defines the model and the fields that are to be displayed.
     class Meta:
         model = Match
-        fields = ('sport', 'name', 'min_age', 'max_age', 'min_rating')
+        fields = ('sport', 'name', 'start_datetime', 'end_time', 'min_age', 'max_age', 'min_rating')
 
 
 
