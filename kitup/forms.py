@@ -96,7 +96,6 @@ class MatchForm(forms.ModelForm):
 
 
 
-
 # Form defines the necessary fields for creating a profile model.
 # Thus, this from should be used for the creation of the user in conjunction
 # with the UserForm form.
@@ -140,3 +139,12 @@ class UserLoginForm(forms.Form):
         fields = ('username', 'password')
 
 
+# Defines a form for the user to update their user specific information
+class UserUpdateForm(forms.Form):
+    first_name = forms.CharField(help_text="Update your First Name goes here.")
+    last_name = forms.CharField(help_text="Update your Last Name goes here.")
+    email = forms.EmailField(help_text="Update your Email here.")
+    password = forms.CharField(widget=forms.PasswordInput(), help_text="Update your Password here.")
+
+    class Meta:
+        fields = ('first_name', 'last_name', 'email', 'password')

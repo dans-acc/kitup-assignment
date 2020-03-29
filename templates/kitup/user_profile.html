@@ -1,5 +1,6 @@
 {% extends 'kitup/base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 
 
 
@@ -14,8 +15,6 @@
 <link rel="stylesheet" type="text/css" href="{% static 'kitup/css/profile.css' %}">
 
 <div class="container">
-    <br>
-    <br>
     <div class="col-md-12 row my-lg-5">
         <div class="col-md-4">
             <div class="portlet light profile-sidebar-portlet bordered">
@@ -53,29 +52,21 @@
                                 <div class="profile-usertitle">
                                     <div class="profile-usertitle-name">Update Profile</div>
                                 </div>
-                                <form>
-                                    <div class="form-group">
-                                        <label for="inputUserName">User Name</label>
-                                        <input type="text" class="form-control" id="inputUserName" placeholder="User Name">
+                                <form id="user_update_form" class="col" method="post">
+                                    <!-- User name -->
+                                    <div class="row my-2">
+                                        <div class="col">{{ user_update_form.first_name | as_crispy_field }}</div>
+                                        <div class="col">{{ user_update_form.last_name | as_crispy_field }}</div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inputName">First Name</label>
-                                        <input type="text" class="form-control" id="inputName" placeholder="Name">
+                                    <div class="row my-2">
+                                        <div class="col">{{ user_update_form.email | as_crispy_field }}</div>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="inputLastName">Last Name</label>
-                                        <input type="text" class="form-control" id="inputLastName" placeholder="Last Name">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputEmail1">Email address</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" placeholder="Email">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputPassword1">Password</label>
-                                        <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                                    <div class="row my-2">
+                                        <div class="col">{{ user_update_form.password | as_crispy_field }}</div>
                                     </div>
                                     <button type="submit" class="btn btn-info  btn-sm">Submit</button>
                                 </form>
+
                             </div>
                             <div role="tabpanel" class="tab-pane active" id="overview">
                                 <div class="profile-usertitle">

@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django import forms
 
 # The main page for the website.
-from kitup.forms import UserForm, MatchForm, ProfileForm, UserLoginForm
+from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm
 
 
 # The main index / home page for the website.
@@ -55,7 +55,7 @@ def user_register(request):
         profile_form = ProfileForm()
 
     # Render the template using the forms.
-    response = render(request, 'kitup/register.html',
+    response = render(request, 'kitup/user_register.html',
         {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
     return response
 
@@ -91,7 +91,7 @@ def user_login(request):
         user_login_form = UserLoginForm()
 
     # Finally, render the response if the form is not being submitted.
-    response = render(request, 'kitup/login.html', {'user_login_form': user_login_form})
+    response = render(request, 'kitup/user_login.html', {'user_login_form': user_login_form})
     return response
 
 
@@ -110,6 +110,8 @@ def user_recover(request):
 #@login_required(login_url='kitup:login')
 def user_profile(request):
     context_dictionary = {}
+    context_dictionary['user_update_form'] = UserUpdateForm
+
     response = render(request, 'kitup/user_profile.html', context_dictionary)
     return response
 

@@ -17,9 +17,9 @@
 					<div class="card-body">
 						<h5 class="card-title text-center">Register</h5>
 							
-							<form id = "user_reg" method = "post" action="{% url 'kitup:register' %}" enctype="multipart/form-data">
+							<form id = "user_reg" method = "post" action="{% url 'kitup:user_register' %}" enctype="multipart/form-data">
 								{% csrf_token %}
-								{{ user_reg | crispy}}
+								{{ user_form | crispy}}
 								<button class="btn btn-lg btn-success btn-block text-uppercase" type="submit">Sign Up</button>
 							</form>
 
