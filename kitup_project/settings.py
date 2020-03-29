@@ -68,6 +68,12 @@ MEDIA_URL = '/media/'
 # The templates that are to be utilised by crispy_froms library.
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Whether or not the date / time pickers should be localized.
+TEMPUS_DOMINUS_LOCALIZE = True
+
+# Required by django-address, attempts to find the exact whereabouts.
+GOOGLE_API_KEY = 'AIzaSyDIj0SneZsfoYp6GTn4cCB5m2Vw7igB9Sg'
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -79,6 +85,7 @@ INSTALLED_APPS = [
 
     'bootstrap4',
     'crispy_forms',
+    'tempus_dominus',
 
     'kitup'
 ]
