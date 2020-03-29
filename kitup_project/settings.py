@@ -87,6 +87,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'tempus_dominus',
 
+    'social_django',
+
     'kitup'
 ]
 
@@ -162,3 +164,17 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+# Social media authentication backends
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.instagram.InstagramOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+
+FACEBOOK_APP_KEY = 675634196622515
+FACEBOOK_APP_SECRET = "2b4dd50dfedbb56ad5719c09b30"
+
+SOCIAL_AUTH_FACEBOOK_KEY = FACEBOOK_APP_KEY        # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = FACEBOOK_APP_SECRET  # App Secret
