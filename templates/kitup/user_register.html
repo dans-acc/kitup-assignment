@@ -35,14 +35,24 @@
 		</div>
 	</div>
 
-	<!-- Separate the form from the title. -->
-	<hr class="my-4">
+	<!-- Defines the form that is used for registration purposes. -->
 	<div class="row">
 		<div class="card card-signin col-lg-12 mx-auto my-5">
 			<div class="card-body">
 				<form id = "user_form" method = "post" action="{% url 'kitup:user_register' %}" enctype="multipart/form-data">
 
+					<!-- Prevent session riding / one-click attack. -->
 					{% csrf_token %}
+
+					<!-- Add the hidden fields from the user form. -->
+					{% for hidden in user_form.hidden_fields %}
+						{{ hidden }}
+					{% endfor %}
+
+					<!-- Add the hidden fields from the profile form -->
+					{% for hidden in profile_form.hidden_fields %}
+						{{ hidden }}
+					{% endfor %}
 
 					<!-- Defines the user name field. -->
 					<div class="row my-3">
