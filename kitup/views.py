@@ -26,7 +26,7 @@ def user_register(request):
 
         # Create forms based on the POST request method.
         user_form = UserForm(request.POST)
-        profile_form = ProfileForm(request.POST)
+        profile_form = ProfileForm(request.POST, request.FILES) # Needed to add request.FILES for pictures to be added
 
         # Check that the forms are in fact valid.
         if user_form.is_valid() and profile_form.is_valid():
@@ -34,7 +34,7 @@ def user_register(request):
             # Save the user model to the database.
             user = user_form.save()
             user.set_password(user_form.cleaned_data['password'])
-            user.set_email(user_form.cleaned_data)
+            #user.set_email(user_form.cleaned_data) # Will fix this next and other validations
             user.save()
 
             # Save the profile form.
