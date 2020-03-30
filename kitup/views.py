@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib.auth.models import User
@@ -107,7 +107,7 @@ def password_reset(request):
     return response
 
 
-
+# Needs completed if e have time
 def password_reset_done(request):
     context_dictionary = {}
 
@@ -136,11 +136,18 @@ def user_recover(request):
 
 
 # View the profile of the user. Displays current matches etc.
-# @login_required(login_url='kitup:login')
+@login_required(login_url='kitup:user_login')
 def user_profile(request):
     context_dictionary = {}
     context_dictionary['user_update_form'] = UserUpdateForm
 
+    user_meta_data = User.objects.get(username=request.user)
+
+    context_dictionary['first_name'] = user_meta_data.first_name
+    context_dictionary['last_name'] = user_meta_data.last_name
+    context_dictionary['email'] = user_meta_data.email
+
+    #print(user_meta_data.Profile.strikes)
     response = render(request, 'kitup/user_profile.html', context_dictionary)
     return response
 

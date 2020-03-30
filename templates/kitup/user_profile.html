@@ -21,7 +21,7 @@
                 <div class="profile-userpic">
                     <img src="../../media/default_profile_photo.png" class="img-responsive" alt=""></div>
                 <div class="profile-usertitle">
-                    <div class="profile-usertitle-name">James Simpson</div>
+                    <div class="profile-usertitle-name">{{ first_name }} {{ last_name }}</div>
                     <div class="profile-rating">Rating: 5/5</div>
                 </div>
                 <div class="profile-userbuttons">
@@ -53,11 +53,6 @@
                                     <div class="profile-usertitle-name">Update Profile</div>
                                 </div>
                                 <form id="user_update_form" class="col" method="post">
-                                    <!-- User name -->
-                                    <div class="row my-2">
-                                        <div class="col">{{ user_update_form.first_name | as_crispy_field }}</div>
-                                        <div class="col">{{ user_update_form.last_name | as_crispy_field }}</div>
-                                    </div>
                                     <div class="row my-2">
                                         <div class="col">{{ user_update_form.email | as_crispy_field }}</div>
                                     </div>
