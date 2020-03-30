@@ -1,8 +1,9 @@
 from django.urls import path
 from django.conf.urls import url
+from django.contrib.auth import views
 
 # The views thats are to be displayed depending on the URL.
-from kitup import views
+from kitup import views as kitup_views
 
 # Enable the use of template tags by defining the app name.
 app_name = 'kitup'
@@ -18,24 +19,24 @@ proviees a convenient way to reference the view - opposed to using
 the URL.
 '''
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('', kitup_views.index, name='index'),
     
-    path('register/', views.user_register, name='user_register'),
-    path('login/', views.user_login, name='user_login'),
-    path('logout/', views.user_logout, name='user_logout'),
+    path('register/', kitup_views.user_register, name='user_register'),
+    path('login/', kitup_views.user_login, name='user_login'),
+    path('logout/', kitup_views.user_logout, name='user_logout'),
 
-    path('password-reset/', views.password_reset, name='password_reset'),
-    path('password-reset/done/', views.password_reset_done, name='password_reset_done'),
-    #path('reset/<uidb64>/<token>/', views.PasswordResetConfirmView, name='password_reset_confirm'),
-    #path('reset/done/', views.PasswordResetCompleteView, name='password_reset_complete'),
+    path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
+    path('password-reset/done/', views.PasswordResetDoneView.as_view(), name='password_reset_done'),
+    path('reset/<uidb64>/<token>/', views.PasswordResetConfirmView.as_view(), name='password_reset_confirm'),
+    path('reset/done/', views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
-    path('profile/', views.user_profile, name='user_profile'),
-    path('profile/<int:user_id>/', views.user_view_profile, name='user_view_profile'),
-    path('settings/', views.user_settings, name='user_settings'),
-    path('report/<int:reported_user_id>', views.user_report, name='user_report'),
+    path('profile/', kitup_views.user_profile, name='user_profile'),
+    path('profile/<int:user_id>/', kitup_views.user_view_profile, name='user_view_profile'),
+    path('settings/', kitup_views.user_settings, name='user_settings'),
+    path('report/<int:reported_user_id>', kitup_views.user_report, name='user_report'),
 
-    path('match/create', views.match_create, name='match_create'),
-    path('match/leave/<int:match_id>/', views.match_leave, name='match_leave'),
-    path('match/view/<int:match_id>/', views.match_view, name='match_view'),
-    path('match/rate/<int:match_id>/', views.match_rate, name='match_rate'),
+    path('match/create', kitup_views.match_create, name='match_create'),
+    path('match/leave/<int:match_id>/', kitup_views.match_leave, name='match_leave'),
+    path('match/view/<int:match_id>/', kitup_views.match_view, name='match_view'),
+    path('match/rate/<int:match_id>/', kitup_views.match_rate, name='match_rate'),
 ]
