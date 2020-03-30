@@ -175,3 +175,11 @@ class UserUpdateForm(forms.Form):
 
     class Meta:
         fields = ('first_name', 'last_name', 'email', 'password')
+
+
+# Defines form for retrieving user email for password recovery
+class EmailPasswordRecovery(forms.Form):
+    email = forms.EmailField(required=True, help_text="Enter Email of Account")
+
+    class Meta:
+        fields = ('email')

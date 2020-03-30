@@ -23,7 +23,12 @@ urlpatterns = [
     path('register/', views.user_register, name='user_register'),
     path('login/', views.user_login, name='user_login'),
     path('logout/', views.user_logout, name='user_logout'),
-    path('recover/', views.user_recover, name='user_recover'),
+
+    path('password-reset/', views.password_reset, name='password_reset'),
+    path('password-reset/done/', views.password_reset_done, name='password_reset_done'),
+    #path('reset/<uidb64>/<token>/', views.PasswordResetConfirmView, name='password_reset_confirm'),
+    #path('reset/done/', views.PasswordResetCompleteView, name='password_reset_complete'),
+
     path('profile/', views.user_profile, name='user_profile'),
     path('profile/<int:user_id>/', views.user_view_profile, name='user_view_profile'),
     path('settings/', views.user_settings, name='user_settings'),

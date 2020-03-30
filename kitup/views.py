@@ -3,10 +3,12 @@ from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django import forms
+from django.contrib.auth.models import User
 
 # The main page for the website.
-from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm
+from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm, EmailPasswordRecovery
 
+from kitup.models import Profile
 
 # The main index / home page for the website.
 def index(request):
@@ -17,7 +19,6 @@ def index(request):
 
 # Invoked when the user wishes to register for the site.
 def user_register(request):
-
     # Whether or not the user has registered for the site.
     registered = False
 
@@ -26,7 +27,7 @@ def user_register(request):
 
         # Create forms based on the POST request method.
         user_form = UserForm(request.POST)
-        profile_form = ProfileForm(request.POST, request.FILES) # Needed to add request.FILES for pictures to be added
+        profile_form = ProfileForm(request.POST, request.FILES)  # Needed to add request.FILES for pictures to be added
 
         # Check that the forms are in fact valid.
         if user_form.is_valid() and profile_form.is_valid():
@@ -34,7 +35,7 @@ def user_register(request):
             # Save the user model to the database.
             user = user_form.save()
             user.set_password(user_form.cleaned_data['password'])
-            #user.set_email(user_form.cleaned_data) # Will fix this next and other validations
+            # user.set_email(user_form.cleaned_data) # Will fix this next and other validations
             user.save()
 
             # Save the profile form.
@@ -57,13 +58,12 @@ def user_register(request):
 
     # Render the template using the forms.
     response = render(request, 'kitup/user_register.html',
-        {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+                      {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
     return response
 
 
 # Invoked when the user wishes to log into the site using their credentials.
 def user_login(request):
-
     if request.method == 'POST':
 
         # Create a form based on the POST request.
@@ -96,6 +96,32 @@ def user_login(request):
     return response
 
 
+# Define view for retrieving the users email for password reset
+def password_reset(request):
+    context_dictionary = {}
+
+    context_dictionary['email_password_form'] = EmailPasswordRecovery
+
+    response = render(request, 'kitup/password_reset_form.html', context_dictionary)
+    return response
+
+
+
+def password_reset_done(request):
+    context_dictionary = {}
+
+    if request.method == 'POST':
+
+        email_password_reset_form = UserUpdateForm(request.POST)
+        if email_password_reset_form.is_valid():
+            email = email_password_reset_form.cleaned_data['email']
+            print(email)
+            if User.objects.filter(email=email).exists():
+                print("email exists")
+
+    response = render(request, 'kitup/password_reset_form.html', context_dictionary)
+    return response
+
 # Invoked in the event the user wishes to log out.
 @login_required
 def user_logout(request):
@@ -107,8 +133,9 @@ def user_logout(request):
 def user_recover(request):
     pass
 
+
 # View the profile of the user. Displays current matches etc.
-#@login_required(login_url='kitup:login')
+# @login_required(login_url='kitup:login')
 def user_profile(request):
     context_dictionary = {}
     context_dictionary['user_update_form'] = UserUpdateForm
@@ -134,16 +161,6 @@ def user_report(request, reported_user_id):
     pass
 
 
-
-
-
-
-
-
-
-
-
-
 # The match creation form.
 @login_required
 def match_create(request):
@@ -153,24 +170,23 @@ def match_create(request):
     return response
 
 
-
-
-
-
 # Enables the user to leave a match they're in.
 @login_required
 def match_leave(request, match_id):
     pass
+
 
 # Accessed post match to rate the players within the game.
 def match_view(request, match_id):
     response = render(request, 'kitup/match_view.html')
     return response
 
+
 # Post view enables players to be ranked.
 @login_required
 def match_rate(request, match_id):
     pass
+
 
 # Enables players to join teams for a given match
 @login_required
