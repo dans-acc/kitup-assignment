@@ -132,14 +132,6 @@ class ProfileForm(forms.ModelForm):
 
 
 
-
-
-
-
-
-
-
-
 # Form defines necessary fields required in order to create a report model.
 # The from and to fields will be hidden given that they are extrapolated
 # within the user_report view.
@@ -168,13 +160,12 @@ class UserLoginForm(forms.Form):
 
 # Defines a form for the user to update their user specific information
 class UserUpdateForm(forms.Form):
-    first_name = forms.CharField(help_text="Update your First Name goes here.")
-    last_name = forms.CharField(help_text="Update your Last Name goes here.")
     email = forms.EmailField(help_text="Update your Email here.")
     password = forms.CharField(widget=forms.PasswordInput(), help_text="Update your Password here.")
+    password_confirm = forms.CharField(widget=forms.PasswordInput(), help_text="Confirm your Update Password")
 
     class Meta:
-        fields = ('first_name', 'last_name', 'email', 'password')
+        fields = ('email', 'password', 'password_confirm')
 
 
 # Defines form for retrieving user email for password recovery

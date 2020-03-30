@@ -52,14 +52,19 @@
                                 <div class="profile-usertitle">
                                     <div class="profile-usertitle-name">Update Profile</div>
                                 </div>
-                                <form id="user_update_form" class="col" method="post">
+                                <form id="email_update_form"  class="col" method="post">
                                     <div class="row my-2">
                                         <div class="col">{{ user_update_form.email | as_crispy_field }}</div>
                                     </div>
+                                    <button type="submit" class="btn btn-info  btn-sm">Update Email</button>
+
+                                </form>
+                                <form id="password_update_form" class="col" method="post">
                                     <div class="row my-2">
                                         <div class="col">{{ user_update_form.password | as_crispy_field }}</div>
+                                        <div class="col">{{ user_update_form.password_confirm | as_crispy_field }}</div>
                                     </div>
-                                    <button type="submit" class="btn btn-info  btn-sm">Submit</button>
+                                    <button type="submit" class="btn btn-info  btn-sm">Update Password</button>
                                 </form>
 
                             </div>
