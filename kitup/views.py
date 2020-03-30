@@ -35,7 +35,7 @@ def user_register(request):
             # Save the user model to the database.
             user = user_form.save()
             user.set_password(user_form.cleaned_data['password'])
-            # user.set_email(user_form.cleaned_data) # Will fix this next and other validations
+            user.email = user_form.cleaned_data['confirm_email']
             user.save()
 
             # Save the profile form.
@@ -51,6 +51,7 @@ def user_register(request):
             registered = True
         else:
             print(user_form.errors, profile_form.errors)
+            return HttpResponse("Registration Failed") # For debugging purposes
 
     else:
         user_form = UserForm()

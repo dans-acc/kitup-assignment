@@ -22,7 +22,7 @@ class UserForm(forms.ModelForm):
     last_name = forms.CharField(help_text='Your last name; not visible to users.')
     email = forms.EmailField(help_text='A valid email address associated with the account.')
     confirm_email = forms.EmailField(help_text='Confirm your email address.')
-    password = forms.CharField(widget=forms.PasswordInput(), help_text='Your account password - used for logging in.')
+    password = forms.CharField(widget=forms.PasswordInput(), help_text='Your account password - used for logging in. Minimum 8 characters required')
     confirm_password = forms.CharField(widget=forms.PasswordInput(), help_text='Confirm your password.')
 
     # The meta data class, defines the model and fields.
@@ -38,6 +38,33 @@ class UserForm(forms.ModelForm):
             raise forms.ValidationError("The passwords do not match!")
 
         return cd['confirm_password']
+
+    def clean_email(self):
+        # Get the email
+        email = self.cleaned_data.get('email')
+
+        # Check to see if any users already exist with this email as a username.
+        try:
+            match = User.objects.get(email=email)
+        except User.DoesNotExist:
+            # Unable to find a user, this is fine
+            return email
+
+        # A user was found with this as a username, raise an error.
+        raise forms.ValidationError('This email address is already in use.')
+
+    # Checks whether or not email exists in the database for a new user registering.
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        try:
+            match = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return email
+
+        # Raises an error if an email already exists for a user.
+        raise forms.ValidationError('This email address is already in use. Please use Password Recovery if you cant login')
+
 
     # Verifies if the email addresses provided match or not.
     def clean(self):
@@ -129,6 +156,16 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ('date_of_birth', 'profile_picture',)
+
+    # Checks whether or not the user has provided a date in the future or not
+    def clean(self):
+        data = super(ProfileForm, self).clean()
+        date_of_birth = data.get('date_of_birth')
+        current_date = datetime.date.today()
+
+        if date_of_birth >= current_date:
+            raise forms.ValidationError("You cannot choose a future date!")
+        return data
 
 
 
