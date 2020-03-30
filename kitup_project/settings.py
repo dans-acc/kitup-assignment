@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # References the template directory in which the HTML files are held.
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
@@ -52,7 +51,7 @@ STATIC_URL = '/static/'
 
 # Used by Django to find the paths to the static files. Because we're using static
 # local files, this denotes the root directory of the static files.
-STATICFILES_DIRS = [STATIC_DIR,]
+STATICFILES_DIRS = [STATIC_DIR, ]
 
 # Used bu django to set up media file hosting.
 # The '/' ensures that the root of the URL '/media/' is separate
@@ -104,7 +103,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'kitup_project.urls'
 
-
 # 'django.template.context_processors.media' enables RequestContext to contain a variable MEDIA_URL
 
 TEMPLATES = [
@@ -127,7 +125,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'kitup_project.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
@@ -147,6 +144,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,  # Sets a minimum of 8 characters on password creation.
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -163,9 +163,8 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
 ]
 
-
 FACEBOOK_APP_KEY = 675634196622515
 FACEBOOK_APP_SECRET = "2b4dd50dfedbb56ad5719c09b30"
 
-SOCIAL_AUTH_FACEBOOK_KEY = FACEBOOK_APP_KEY        # App ID
+SOCIAL_AUTH_FACEBOOK_KEY = FACEBOOK_APP_KEY  # App ID
 SOCIAL_AUTH_FACEBOOK_SECRET = FACEBOOK_APP_SECRET  # App Secret
