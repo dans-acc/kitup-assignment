@@ -22,11 +22,13 @@
                     <img src="../../media/default_profile_photo.png" class="img-responsive" alt=""></div>
                 <div class="profile-usertitle">
                     <div class="profile-usertitle-name">{{ first_name }} {{ last_name }}</div>
-                    <div class="profile-rating">Rating: 5/5</div>
+                    <div class="profile-rating">Rating: {{ rating }}/5.0</div>
                 </div>
+                <!--
                 <div class="profile-userbuttons">
                     <button type="button" class="btn btn-info  btn-sm">Report</button>
                 </div>
+                -->
             </div>
         </div>
         <div class="col-md-8">
@@ -81,7 +83,7 @@
                                             {% if matches.len <= 0 %}
                                                 No upcoming Matches!
                                             {% else %}
-                                                {% for match in completed_matches %}
+                                                {% for match in matches %}
                                                     <div class="card h-100">
                                                         <div class="card-body">
 
@@ -101,7 +103,6 @@
 
                                                         <!-- Options for joining or leaving the match. -->
                                                         <div class="card-footer text-center">
-                                                            <a class="btn btn-danger mr-2" href="#" role="button">Leave Game</a>
                                                             <a class="btn btn-dark" href="#" role="button">View Details</a>
                                                         </div>
 

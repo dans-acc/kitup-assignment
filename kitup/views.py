@@ -152,6 +152,7 @@ def user_profile(request):
         context_dictionary['first_name'] = user_meta_data.first_name
         context_dictionary['last_name'] = user_meta_data.last_name
         context_dictionary['email'] = user_meta_data.email
+        context_dictionary['rating'] = profile.rating
         context_dictionary['matches'] = matches
 
         #print(user_meta_data.Profile.strikes)
