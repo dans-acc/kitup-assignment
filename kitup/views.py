@@ -132,20 +132,37 @@ def user_recover(request):
 
 
 # View the profile of the user. Displays current matches etc.
-@login_required(login_url='kitup:user_login')
+@login_required
 def user_profile(request):
-    context_dictionary = {}
-    context_dictionary['user_update_form'] = UserUpdateForm
+    try:
+        context_dictionary = {}
+        context_dictionary['user_update_form'] = UserUpdateForm
 
-    user_meta_data = User.objects.get(username=request.user)
+        profile = Profile.objects.get(user=request.user)
 
-    context_dictionary['first_name'] = user_meta_data.first_name
-    context_dictionary['last_name'] = user_meta_data.last_name
-    context_dictionary['email'] = user_meta_data.email
+        user_meta_data = User.objects.get(username=request.user)
+        matches_participants = MatchParticipant.objects.filter(profile=profile)
+        matches = []
+        for matches_participant in matches_participants:
+            #print(matches_participant.match)
+            match = Match.objects.get(name=matches_participant.match)
+            matches.append(match)
 
-    #print(user_meta_data.Profile.strikes)
-    response = render(request, 'kitup/user_profile.html', context_dictionary)
-    return response
+        print(matches)
+        context_dictionary['first_name'] = user_meta_data.first_name
+        context_dictionary['last_name'] = user_meta_data.last_name
+        context_dictionary['email'] = user_meta_data.email
+        context_dictionary['matches'] = matches
+
+        #print(user_meta_data.Profile.strikes)
+        response = render(request, 'kitup/user_profile.html', context_dictionary)
+        return response
+
+    except Profile.DoesNotExist:
+        return HttpResponse('Profile does not exist.')
+
+
+
 
 
 # Permits the viewing of another players profile.
@@ -449,5 +466,4 @@ def match_view(request, match_id):
 # Post view enables players to be ranked.
 @login_required
 def match_rate(request, match_id):
-
     pass
