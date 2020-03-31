@@ -237,6 +237,7 @@ def match_leave(request, match_id):
     # Redirect them back to the match view page.
     return redirect(reverse('kitup:match_view', kwargs={'match_id': match.id}))
 
+'''
 # Permits the user to report the player for a variety of reasons.
 @login_required
 def match_report(request, match_id, reported_user_id):
@@ -286,6 +287,101 @@ def match_report(request, match_id, reported_user_id):
         return HttpResponse('User does not exist')
 
     return HttpResponse('Report successfully submitted')
+'''
+
+# A simplified means of reporting the participant.
+@login_required
+def match_report(request, participant_id):
+
+    try:
+
+        # Get the reported participant data.
+        reported_participant = MatchParticipant.objects.get(id=participant_id)
+        reported_profile = reported_participant.profile
+        reported_user = reported_profile.user
+
+        # Get the reporting users profile.
+        reporting_profile = Profile.objects.get(user=request.user)
+        reporting_participant = MatchParticipant.objects.get(profile=reporting_profile, match=reported_participant.match)
+
+        # Check whether the participant can be reported.
+        if reported_user is request.user:
+            return HttpResponse('You cannot report yourself')
+        elif not reporting_profile.accepted:
+            return HttpResponse('You were not part of this game')
+        elif not reported_participant.accepted:
+            return HttpResponse('Reported participant not part of game')
+        elif not match.is_in_past():
+            return HttpResponse('Match is not past')
+
+        # Check that the user is not reporting them selves and the match is past.
+        if not reported_participant.match.is_in_past():
+            return HttpResponse('Match not in past, cannot report.')
+        elif not reported_participant.accepted:
+            return HttpResponse('The user did not participate in this match')
+        elif reported_participant.match.owner is request.user:
+            return HttpResponse('You cannot report yourself')
+
+    except MatchParticipant.DoesNotExist:
+        return HttpResponse('Failed to identify the participants')
+
+    return HttpResponse('Report successfully submitted')
+
+# Permits the owner to accept a user into the match in the event it is private.
+@login_required
+def match_accept(request, participant_id):
+    
+    try:
+
+        # Get the participant that's to be accepted, check if they're accepted.
+        participant = MatchParticipant.objects.get(id=participant_id)
+
+        # Check wherher they can be accepted.
+        if participant.accepted:
+            return HttpResponse('Participant already accepted.')
+        elif not participant.match.owner is request.user:
+            return HttpResponse('You do not have permission to accept the user')
+        elif match.is_in_past():
+            return HttpResponse('Match is in past, cannot accept additional players.')
+        elif match.sport.max_participants <= MatchParticipant.objects.filter(match=participant.match, accepted=True):
+            return HttpResponse('The maximum number of participants have been accepted.')
+
+        # Finally, update the status of the participant.
+        participant.accepted = True
+        participant.save()
+
+    except MatchParticipant.DoesNotExist:
+        return HttpResponse('Match participant does not exist.')
+
+    # We have successfully accepted the participant.
+    return HttpResponse('Participant successfully accepted')
+
+# Permits the owner to kick a player from the match.
+@login_required
+def match_kick(request, participant_id):
+    
+    try:
+
+        # Get the participant that is being kicked.
+        participant = MatchParticipant.objects.get(id=participant_id)
+
+        # Check that the participant can be kicked.
+        if match.is_in_past():
+            return HttpResponse('Cannot kick participant, match in the past')
+        elif participant.match.owner is not request.user:
+            return HttpResponse('You do not have permission to kick yourself')
+        elif not participant.accepted:
+            return HttpResponse('The participant has not been accepted')
+
+        # Finally, we can kick the participant from the match.
+        participant.delete()
+
+    except MatchParticipant.DoesNotExist:
+        return HttpResponse('The match participant does not exist.')
+
+    # We have successfully kicked the participant.
+    return HttpResponse('Participant successfully kicked')
+
 
 # Permits the match to be viewed.
 def match_view(request, match_id):

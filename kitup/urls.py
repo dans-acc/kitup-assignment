@@ -37,7 +37,9 @@ urlpatterns = [
     path('match/create', kitup_views.match_create, name='match_create'),
     path('match/join/<int:match_id>', kitup_views.match_join, name='match_join'),
     path('match/leave/<int:match_id>/', kitup_views.match_leave, name='match_leave'),
-    path('match/report/<int:match_id>/<int:reported_user_id>/', kitup_views.match_report, name='match_report'),
+    path('match/report/<int:participant_id>/', kitup_views.match_report, name='match_report'),
+    path('match/accept/<int:participant_id>/', kitup_views.match_accept, name='match_accept'),
+    path('match/kick/<int:participant_id>/', kitup_views.match_kick, name='match_kick'),
     path('match/view/<int:match_id>/', kitup_views.match_view, name='match_view'),
     path('match/rate/<int:match_id>/', kitup_views.match_rate, name='match_rate'),
 ]
