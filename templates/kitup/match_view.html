@@ -1,4 +1,5 @@
 {% extends 'kitup/base.html' %}
+{% load crispy_forms_tags %}
 
 <!-- Overwrite the title of the page. -->
 {% block title_block %}
@@ -28,7 +29,7 @@ Viewing Match
 		<div class="col-lg-5">
 
 			<!-- General information about the match. -->
-			<h1 class="font-weight-light">Daniels' Mad Gathering!</h1>
+			<h1 class="font-weight-light">{{ match.name}}</h1>
 			<dl class="row">
 				<dt class="font-weight-light col-sm-3">Sport:</dt>
 				<dd class="col-sm-9">{{ match.sport.name }}</dd>
@@ -42,14 +43,157 @@ Viewing Match
 				<dd class="col-sm-9">{{ match.min_age }} to {{ match.max_age }}</dd>
 				<dt class="font-weight-light col-sm-3">Min. Rating:</dt>
 				<dd class="col-sm-9">{{ match.min_rating }}</dd>
-				<dt class="font-weight-light col-sm-3">Private</dt>
+				<dt class="font-weight-light col-sm-3">Private:</dt>
 				<dd class="col-sm-9">{{ match.private }}</dd>
+				<dt class="font-weight-light col-sm-3">Owner:</dt>
+				<dd class="col-sm-9">{{ match.owner.username }}{% if user_is_owner %} (You){% endif %}</dd>
 			</dl>
 
-			<!-- The match button options. -->
-			<a class="btn btn-success" href="#" role="button">Requests</a>
-			<a class="btn btn-dark" href="#" role="button">Edit</a>
-			<a class="btn btn-dark" href="#" role="button">Disband</a>
+			<!-- Only display options if match is not in past. -->
+			{% if not match_is_in_past %}
+				{% if user.is_authenticated %}
+
+					<!-- Determine if the user is the owner or not. -->
+					{% if user_is_owner %}
+
+						<!-- Display owner related options. -->
+						<a class="btn btn-success" href="#" role="button">Match Requests</a>
+						<a class="btn btn-dark" href="#" role="button">Edit Details</a>
+						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelMatchConfirmationModal">Cancel Match</button>
+
+						<!-- Modal for displaying the requests. -->
+
+
+						<!-- Modal for confirmation of cancelation; forces user to confirm their actions. -->
+						<div class="modal fade" id="cancelMatchConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="cancelMatchConfirmationModalTitle" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="cancelMatchConfirmationModalTitle">Cancel Match: {{ match.name }}</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										<p>By clicking <q>Cancel</q> the match <q>{{ match.name }}</q> will be cancelled from running. Consequently, this match will no longer be accessible.</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+										<a class="btn btn-danger" href="{% url 'kitup:match_leave' match.id %}" role="button">Cancel Match</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+					{% else %}
+
+						<!-- Check if the user has joined already, or not. -->
+						{% if user_participant is None %}
+
+							<!-- Determine the button logo for joining the match. -->
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#joinMatchModal">
+								{% if match.private or match_is_full %}
+									Send Join Request
+								{% else %}
+									Join Match
+								{% endif %}
+							</button>
+
+							<!-- START: User join request modal. -->
+							<div class="modal fade" id="joinMatchModal" tabindex="-1" role="dialog" aria-labelledby="joinMatchModalTitle" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+										<form id="participant_report_form" method="post">
+											<div class="modal-header">
+												<h5 class="modal-title" id="joinMatchModalTitle">
+													{% if match.private or match_is_full %}
+														Send Join Request for Match:
+													{% else %}
+														Join Match:
+													{% endif %}
+													{{ match.name }}
+												</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<p>By joining or requesting to join a match you agree to abide by the terms and conditions of the site.</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+												<a class="btn btn-success" href="{% url 'kitup:match_join' match.id %}" role="button">
+													{% if match.private or match_is_full %}
+														Send Join Request
+													{% else %}
+														Join Match
+													{% endif %}
+												</a>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							<!-- END: User join request modal. -->
+
+						{% else %}
+
+							<!-- The type of button that's to be displayed to the user for leaving the match. -->
+							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#joinMatchModal">
+								{% if user_participant.accepted %}
+									Leave Match
+								{% else %}
+									Cancel Join Request
+								{% endif %}
+							</button>
+
+							<!-- START: User leave match modal. -->
+							<div class="modal fade" id="leaveMatchModal" tabindex="-1" role="dialog" aria-labelledby="leaveMatchModalTitle" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+										<form id="participant_report_form" method="post">
+											<div class="modal-header">
+												<h5 class="modal-title" id="leaveMatchModalTitle">
+													{% if user_participant.accepted %}
+														Leave Match: {{ match.name }}
+													{% else %}
+														Cancel <q>{{ match.name }}</q> Join Match Request
+													{% endif %}
+												</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												<p>By leaving or cancelling the request you will be withdrawn from match {{ match.name }}</p>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+												<a class="btn btn-success" href="{% url 'kitup:match_leave' match.id %}" role="button">
+													{% if user_participant.accepted %}
+														Leave Match
+													{% else %}
+														Cancel Join Match Request
+													{% endif %}
+												</a>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+							<!-- END: User leave match modal. -->
+
+
+						{% endif %}
+					{% endif %}
+				{% else %}
+
+					<!-- If they are not authenticated, take them to the login page. -->
+					<a class="btn btn-success" href="{% url 'kitup:user_login' %}" role="button">Login to Join</a>
+
+				{% endif %}
+			{% endif %}
 
 		</div>
 	</div>
@@ -91,13 +235,13 @@ Viewing Match
 
 						<!-- Not logged in, view the profile. -->
 						<a class="btn btn-dark w-100" href="{% url 'kitup:user_view_profile' participant.profile.id %}" 
-						role="button">View</a>
+						role="button">View x</a>
 
 					{% else %}
 
 						<!-- Display the regular options. -->
 						<div class="row text-center">
-							{% if match_is_in_past %}
+							{% if match_is_in_past and participant.profile.user != user %}
 								<div class="col pr-1">
 									<a class="btn btn-success w-100" href="#" role="button">Rate</a>
 								</div>
@@ -112,13 +256,46 @@ Viewing Match
 						</div>
 
 						<!-- Ensure that no action can be taken on ones self. -->
-						{% if participant.profile.user is user %}
+						{% if participant.profile.user != user %}
 							{% if match_is_in_past %}
 
 								<!-- Match is in the past, the player can only be reported. -->
-								<div class="row text-center mt-2">
+								<div class="row text-left mt-2">
 									<div class="col">
-										<a class="btn btn-danger w-100" href="{% url 'kitup:match_report' participant.id %}" role="button">Report</a>
+
+
+										<!-- START: Report player form modal. -->
+										<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#reportParticipantFormModal">Report</button>
+										<div class="modal fade" id="reportParticipantFormModal" tabindex="-1" role="dialog" aria-labelledby="reportParticipantFormModalTitle" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered" role="document">
+												<div class="modal-content">
+													<form id="report_participant_form" method="post">
+														<div class="modal-header">
+															<h5 class="modal-title" id="reportFormModalTitle">Report Participant: {{ participant.profile.user.username }}</h5>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															<div class="row my-3">
+																<div class="col"> {{ report_participant_form.reason | as_crispy_field }} </div>
+															</div>
+
+															<div class="row my-3">
+																<div class="col"> {{ report_participant_form.desc | as_crispy_field }} </div>
+															</div>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+															<a class="btn btn-success" href="{% url 'kitup:match_report' participant.id %}" role="button">Submit Report</a>
+														</div>
+													</form>
+												</div>
+											</div>
+										</div>
+										<!-- END: Report player form modal. -->
+
+
 									</div>
 								</div>
 
@@ -126,8 +303,35 @@ Viewing Match
 								{% if user_is_owner %}
 
 									<!-- Match is not in the past, and the owner can kick the player. -->
-									<div class="row text-center mt-2">
-										<div class="col"><a class="btn btn-danger w-100" href="{% url 'kitup:match_kick' participant.id %}" role="button">Kick</a></div>
+									<div class="row text-left mt-2">
+										<div class="col">
+
+											<!-- Start: Kick participant modal. -->
+											<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#kickParticipantModal">Kick</button>
+											<div class="modal fade" id="kickParticipantModal" tabindex="-1" role="dialog" aria-labelledby="kickParticipantModalTitle" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-centered" role="document">
+													<div class="modal-content">
+														<form id="participant_kick_form" method="post">
+															<div class="modal-header">
+																<h5 class="modal-title" id="kickParticipantModalTitle">Kick Match Participant: {{ participant.profile.user.username }}</h5>
+																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																	<span aria-hidden="true">&times;</span>
+																</button>
+															</div>
+															<div class="modal-body">
+																<p>By clicking <q>Kick Participant</q> the corresponding user ({{ participant.profile.user.username}}) will be kicked from the match.</p>
+															</div>
+															<div class="modal-footer">
+																<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+																<a class="btn btn-success" href="{% url 'kitup:match_kick' participant.id %}" role="button">Kick Participant</a>
+															</div>
+														</form>
+													</div>
+												</div>
+											</div>
+											<!-- END: Kick participant modal. -->
+
+										</div>
 									</div>
 
 								{% endif %}

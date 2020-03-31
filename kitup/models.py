@@ -85,7 +85,7 @@ class Match(models.Model):
 
     # Whether the match is in the past.
     def is_in_past(self):
-        return True
+        return False
 
     # Model metadata.
     class Meta:

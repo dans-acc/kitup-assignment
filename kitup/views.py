@@ -444,7 +444,7 @@ def match_view(request, match_id):
             profile = Profile.objects.get(user=request.user)
             if MatchParticipant.objects.filter(profile=profile, match=match).exists():
                 participant = MatchParticipant.objects.get(profile=profile, match=match)
-            is_owner = participant is not None and participant.match is match and match.owner is request.user
+            is_owner = participant is not None and participant.match == match and match.owner == request.user
             if is_owner:
                 pending_participants = MatchParticipant.objects.filter(match=match, accepted=False)
 
@@ -458,6 +458,9 @@ def match_view(request, match_id):
         # Set the user context values.
         context_dictionary['user_is_owner'] = is_owner
         context_dictionary['user_participant'] = participant
+
+        # Add any of the page forms.
+        context_dictionary['report_participant_form'] = MatchParticipantReportForm()
 
         print(context_dictionary)
 
