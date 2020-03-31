@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from tempus_dominus import widgets as tdWidgets
 from django.contrib.admin import widgets as adminWidgets
 
-from kitup.models import User, Profile, Sport, Match, Player, Report
+from kitup.models import Profile, Sport, Match, MatchParticipant, PlayerReport
 
 
 # Form is used for the creation of djangos default User model.
@@ -16,7 +16,7 @@ from kitup.models import User, Profile, Sport, Match, Player, Report
 class UserForm(forms.ModelForm):
 
     # Overwrite the User models fields.
-    username = forms.CharField(min_length=Profile.USER_USERNAME_MIN_LENGTH, max_length=Profile.USER_USERNAME_MAX_LENGTH,
+    username = forms.CharField(min_length=Profile.USER_USERNAME_MIN_LEN, max_length=Profile.USER_USERNAME_MAX_LEN,
                                help_text='The name visible to other users of the site.')
     first_name = forms.CharField(help_text='Your first name; not visible to users.')
     last_name = forms.CharField(help_text='Your last name; not visible to users.')
@@ -86,7 +86,7 @@ class MatchForm(forms.ModelForm):
 
     # The necessary fields that are used to create the match.
     sport = forms.ChoiceField(help_text='The sport for which the match is being held.')
-    name = forms.CharField(max_length=Match.NAME_MAX_LENGTH, help_text='The name of the match.')
+    name = forms.CharField(max_length=Match.NAME_MAX_LEN, help_text='The name of the match.')
 
     # Match when and where fields, respectively - time and address. 
     start_datetime = forms.DateTimeField(
@@ -110,9 +110,9 @@ class MatchForm(forms.ModelForm):
     )
 
     # Match participant restriction fields - age and ranking limitations.
-    min_age = forms.IntegerField(initial=Match.DEFAULT_MIN_AGE, help_text='Minimum participating age.')
-    max_age = forms.IntegerField(initial=Match.DEFAULT_MAX_AGE, help_text='Maximum participating age.')
-    min_rating = forms.IntegerField(initial=Match.DEFAULT_MIN_RATING, help_text='The minimum rating of an attendee.')
+    min_age = forms.IntegerField(initial=Match.MIN_AGE_DEFAULT, help_text='Minimum participating age.')
+    max_age = forms.IntegerField(initial=Match.MAX_AGE_DEFAULT, help_text='Maximum participating age.')
+    min_rating = forms.IntegerField(initial=Match.MIN_RATING_DEFAULT, help_text='The minimum rating of an attendee.')
 
     # Meta class defines the model and the fields that are to be displayed.
     class Meta:
@@ -183,11 +183,11 @@ class ProfileForm(forms.ModelForm):
 class ReportForm(forms.ModelForm):
 
     # Define the necessary fields in order to create a report.
-    reason = forms.CharField(max_length=Report.REASON_MAX_LENGTH)
+    reason = forms.CharField(max_length=PlayerReport.REASON_MAX_LEN)
 
     # Defines the meta data for the report form.
     class Meta:
-        model = Report
+        model = PlayerReport
         fields = ('reason',)
 
 
