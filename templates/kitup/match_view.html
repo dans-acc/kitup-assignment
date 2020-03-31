@@ -31,15 +31,19 @@ Viewing Match
 			<h1 class="font-weight-light">Daniels' Mad Gathering!</h1>
 			<dl class="row">
 				<dt class="font-weight-light col-sm-3">Sport:</dt>
-				<dd class="col-sm-9">Football</dd>
+				<dd class="col-sm-9">{{ match.sport.name }}</dd>
+				
 				<dt class="font-weight-light col-sm-3">Date:</dt>
 				<dd class="col-sm-9">June, 6 10:20 until 11:20</dd>
 				<dt class="font-weight-light col-sm-3">Location:</dt>
 				<dd class="col-sm-9">35 Middleton Park, Brechin.</dd>
+				
 				<dt class="font-weight-light col-sm-3">Ages:</dt>
-				<dd class="col-sm-9">16+</dd>
+				<dd class="col-sm-9">{{ match.min_age }} to {{ match.max_age }}</dd>
 				<dt class="font-weight-light col-sm-3">Min. Rating:</dt>
-				<dd class="col-sm-9">1430</dd>
+				<dd class="col-sm-9">{{ match.min_rating }}</dd>
+				<dt class="font-weight-light col-sm-3">Private</dt>
+				<dd class="col-sm-9">{{ match.private }}</dd>
 			</dl>
 
 			<!-- The match button options. -->
@@ -60,24 +64,90 @@ Viewing Match
 		</div>
 	</div>
 
-	<!-- Displays the individual players that are participating in the event. -->
-	<div class="row text-center">
-		
-		<!-- Define the card that's utilised for the addition of new players. -->
+	<!-- Display the match participants. -->
+	{% for participant in match_accepted_participants %}
+
+		<!-- If we're displaying the first participant, open a new row -->
+		{% if forloop.first %}<div class="row text-center">{% endif %}
+
+		<!-- Generate a participant. -->
 		<div class="col-lg-3 col-md-6 mb-4">
 			<div class="card h-100">
 				<img class="card-img-top" src="http://placehold.it/500x325">
+
+				<!-- Display the information about the user. -->
 				<div class="card-body">
-					<h5 class="card-title font-weight-light">Invite Friends!</h5>
-					<p class="card-text">Start playing by inviting your friends.</p>
+					<h5 class="card-title font-weight-light">{{ participant.profile.user.username }}</h5>
+					<p class="card-text">
+						Rating: {{ participant.profile.rating }}
+					</p>
 				</div>
+
+				<!-- Defines the options permissible to the user for that player. -->
 				<div class="card-footer">
-					<a class="btn btn-success" href="#" role="button">Invite Player</a>
+
+					<!-- Display appropriate options. -->
+					{% if not user.is_authenticated or user_participant is None or not user_participant.accepted %}
+
+						<!-- Not logged in, view the profile. -->
+						<a class="btn btn-dark w-100" href="{% url 'kitup:user_view_profile' participant.profile.id %}" 
+						role="button">View</a>
+
+					{% else %}
+
+						<!-- Display the regular options. -->
+						<div class="row text-center">
+							{% if match_is_in_past %}
+								<div class="col pr-1">
+									<a class="btn btn-success w-100" href="#" role="button">Rate</a>
+								</div>
+								<div class="col pl-1">
+									<a class="btn btn-dark w-100" href="#" role="button">View</a>
+								</div>
+							{% else %}
+								<div class="col">
+									<a class="btn btn-dark w-100" href="#" role="button">View</a>
+								</div>
+							{% endif %}
+						</div>
+
+						<!-- Ensure that no action can be taken on ones self. -->
+						{% if participant.profile.user is user %}
+							{% if match_is_in_past %}
+
+								<!-- Match is in the past, the player can only be reported. -->
+								<div class="row text-center mt-2">
+									<div class="col">
+										<a class="btn btn-danger w-100" href="{% url 'kitup:match_report' participant.id %}" role="button">Report</a>
+									</div>
+								</div>
+
+							{% else %}
+								{% if user_is_owner %}
+
+									<!-- Match is not in the past, and the owner can kick the player. -->
+									<div class="row text-center mt-2">
+										<div class="col"><a class="btn btn-danger w-100" href="{% url 'kitup:match_kick' participant.id %}" role="button">Kick</a></div>
+									</div>
+
+								{% endif %}
+							{% endif %}
+						{% endif %}
+
+					{% endif %}
+
 				</div>
 			</div>
 		</div>
 
-	</div>
+		<!-- Process rows. -->
+		{% if forloop.last %}
+			</div>
+		{% else %}
+			{% if forloop.counter|divisibleby:"4" %}</div><div class="row">{% endif %}
+		{% endif %}
+
+	{% endfor %}
 
 </div>
 

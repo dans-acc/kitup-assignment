@@ -410,35 +410,38 @@ def match_view(request, match_id):
 
     try:
 
-        # Get the match being viewed, and the profile viewing the match.
-        profile = Profile.objects.get(user=request.user)
+        # Get the match and all the accepted participants.
         match = Match.objects.get(id=match_id)
-
-        # Gets all of the participants.
         accepted_participants = MatchParticipant.objects.filter(match=match, accepted=True)
 
-        # Check if the user is participating.
+        profile = None
         participant = None
-        if not MatchParticipant.objects.filter(profile=profile, match=match).exists():
-            participant = MatchParticipant.objects.get(profile=profile, match=match)
-
-        # If the user is an owner, get the pending requests.
-        is_owner = participant is not None and participant.match is match and match.owner is request.user
+        is_owner = False
         pending_participants = None
-        if is_owner:
-            pending_participants = MatchParticipant.objects.filter(match=match, accepted=False)
+
+        # If the user can be authenticated, update fields accordingly.
+        if request.user.is_authenticated:
+
+            # Update the context variables.
+            profile = Profile.objects.get(user=request.user)
+            if MatchParticipant.objects.filter(profile=profile, match=match).exists():
+                participant = MatchParticipant.objects.get(profile=profile, match=match)
+            is_owner = participant is not None and participant.match is match and match.owner is request.user
+            if is_owner:
+                pending_participants = MatchParticipant.objects.filter(match=match, accepted=False)
 
         # Set the match context values.
         context_dictionary['match'] = match
         context_dictionary['match_is_in_past'] = match.is_in_past()
-        context_dictionary['match_is_full'] = match.sport.max_participants <= participant.count()
-        context_dictionary['match_accepted_participants'] = accepted_participant
+        context_dictionary['match_is_full'] = match.sport.max_participants <= accepted_participants.count()
+        context_dictionary['match_accepted_participants'] = accepted_participants
         context_dictionary['match_pending_participants'] = pending_participants
 
         # Set the user context values.
-        context_dictionary['user_is_owner'] = participant is not None and participant.match is match and match.owner is request.user
-        context_dictionary['user_is_participating'] = participant is not None
+        context_dictionary['user_is_owner'] = is_owner
         context_dictionary['user_participant'] = participant
+
+        print(context_dictionary)
 
     except Match.DoesNotExist:
         return HttpResponse('Match does not exist.')
@@ -448,6 +451,6 @@ def match_view(request, match_id):
 
 # Post view enables players to be ranked.
 @login_required
-def match_rate(request, match_id):
+def match_rate(request, participant_id):
 
     pass

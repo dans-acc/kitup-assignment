@@ -40,6 +40,6 @@ urlpatterns = [
     path('match/report/<int:participant_id>/', kitup_views.match_report, name='match_report'),
     path('match/accept/<int:participant_id>/', kitup_views.match_accept, name='match_accept'),
     path('match/kick/<int:participant_id>/', kitup_views.match_kick, name='match_kick'),
+    path('match/rate/<int:participant_id>/', kitup_views.match_rate, name='match_rate'),
     path('match/view/<int:match_id>/', kitup_views.match_view, name='match_view'),
-    path('match/rate/<int:match_id>/', kitup_views.match_rate, name='match_rate'),
 ]

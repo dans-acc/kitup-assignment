@@ -69,7 +69,7 @@ class Match(models.Model):
     # Attributes pertaining to the match type.
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=NAME_MAX_LEN, null=False)
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
 
     # Match times i.e. start date and time, and time it finishes.
     start_datetime = models.DateTimeField(null=False)
