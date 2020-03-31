@@ -33,10 +33,11 @@ urlpatterns = [
     path('profile/', kitup_views.user_profile, name='user_profile'),
     path('profile/<int:user_id>/', kitup_views.user_view_profile, name='user_view_profile'),
     path('settings/', kitup_views.user_settings, name='user_settings'),
-    path('report/<int:reported_user_id>', kitup_views.user_report, name='user_report'),
 
     path('match/create', kitup_views.match_create, name='match_create'),
+    path('match/join/<int:match_id>', kitup_views.match_join, name='match_join'),
     path('match/leave/<int:match_id>/', kitup_views.match_leave, name='match_leave'),
+    path('match/report/<int:match_id>/<int:reported_user_id>/', kitup_views.match_report, name='match_report'),
     path('match/view/<int:match_id>/', kitup_views.match_view, name='match_view'),
     path('match/rate/<int:match_id>/', kitup_views.match_rate, name='match_rate'),
 ]

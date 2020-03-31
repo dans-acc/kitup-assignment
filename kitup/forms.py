@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 from tempus_dominus import widgets as tdWidgets
 from django.contrib.admin import widgets as adminWidgets
 
-from kitup.models import Profile, Sport, Match, MatchParticipant, PlayerReport
+from kitup.models import Profile, Sport, Match, MatchParticipant, MatchParticipantReport, ReportReason
 
 
 # Form is used for the creation of djangos default User model.
@@ -168,19 +168,24 @@ class ProfileForm(forms.ModelForm):
         return data
 
 
+# Form is submitted when reporting a match participant.
+class MatchParticipantReportForm(forms.ModelForm):
 
-# Form defines necessary fields required in order to create a report model.
-# The from and to fields will be hidden given that they are extrapolated
-# within the user_report view.
-class ReportForm(forms.ModelForm):
+    # The generalised reason for the report.
+    reason = forms.ChoiceField(
+        choices=[(tag, tag.value) for tag in ReportReason], 
+        help_text='Generalised reason for the report.')
 
-    # Define the necessary fields in order to create a report.
-    reason = forms.CharField(max_length=PlayerReport.REASON_MAX_LEN)
+    # The specific reasoning.
+    desc = forms.CharField(
+        min_length=MatchParticipantReport.REASON_DESC_MIN_LEN, 
+        max_length=MatchParticipantReport.REASON_DESC_MAX_LEN,
+        help_text='Specify the reasoning for the report.')
 
-    # Defines the meta data for the report form.
+    # From metadata.
     class Meta:
-        model = PlayerReport
-        fields = ('reason',)
+        model = MatchParticipantReport
+        fields = ('reason', 'desc',)
 
 
 # Defines a form that's to be used for logging in.

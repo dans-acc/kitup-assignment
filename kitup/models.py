@@ -126,10 +126,11 @@ class ReportReason(Enum):
     UNFAIR = 'Unfair'
 
 # Defines a report; can only report in match. Multiple can be submited.
-class PlayerReport(models.Model):
+class MatchParticipantReport(models.Model):
 
     # Define model constants.
     REASON_MAX_LEN = 19
+    REASON_DESC_MIN_LEN = 10
     REASON_DESC_MAX_LEN = 80
 
     # Since there aren't chats, you can only report them from matches.
@@ -141,7 +142,7 @@ class PlayerReport(models.Model):
 
     # The reason category and description, respectively.
     reason = models.CharField(max_length=REASON_MAX_LEN, null=False, choices=[(tag, tag.value) for tag in ReportReason])
-    desc = models.CharField(max_length=REASON_DESC_MAX_LEN)
+    desc = models.CharField(max_length=REASON_DESC_MAX_LEN, null=False)
 
     # Model metadata.
     class Meta:
