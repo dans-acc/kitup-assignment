@@ -69,7 +69,7 @@ class Match(models.Model):
     # Attributes pertaining to the match type.
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=NAME_MAX_LEN, null=False)
-    match_owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=False)
 
     # Match times i.e. start date and time, and time it finishes.
     start_datetime = models.DateTimeField(null=False)
@@ -115,7 +115,7 @@ class MatchParticipant(models.Model):
 
     # Defines the name of the model.
     def __str__(self):
-        return user.username
+        return self.profile.user.username
 
 # Defines the reasons for which a player can be reported.
 class ReportReason(Enum):
