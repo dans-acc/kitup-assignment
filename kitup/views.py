@@ -153,6 +153,10 @@ def user_profile(request):
         context_dictionary['last_name'] = user_meta_data.last_name
         context_dictionary['email'] = user_meta_data.email
         context_dictionary['rating'] = profile.rating
+        if profile.profile_picture is not None:
+            context_dictionary['profile_picture'] = profile.profile_picture
+        else:
+            context_dictionary['profile_picture'] = None
         context_dictionary['matches'] = matches
 
         #print(user_meta_data.Profile.strikes)
