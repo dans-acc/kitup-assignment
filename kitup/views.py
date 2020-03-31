@@ -299,18 +299,25 @@ def match_view(request, match_id):
         match = Match.objects.get(id=match_id)
 
         # Gets all of the participants.
-        participants = MatchParticipant.objects.filter(match=match, accepted=True)
-
-        # Set the match context values.
-        context_dictionary['match'] = match
-        context_dictionary['match_is_in_past'] = match.is_in_past()
-        context_dictionary['match_is_full'] = match.sport.max_participants <= participant.count()
-        context_dictionary['match_participants'] = participant
+        accepted_participants = MatchParticipant.objects.filter(match=match, accepted=True)
 
         # Check if the user is participating.
         participant = None
         if not MatchParticipant.objects.filter(profile=profile, match=match).exists():
             participant = MatchParticipant.objects.get(profile=profile, match=match)
+
+        # If the user is an owner, get the pending requests.
+        is_owner = participant is not None and participant.match is match and match.owner is request.user
+        pending_participants = None
+        if is_owner:
+            pending_participants = MatchParticipant.objects.filter(match=match, accepted=False)
+
+        # Set the match context values.
+        context_dictionary['match'] = match
+        context_dictionary['match_is_in_past'] = match.is_in_past()
+        context_dictionary['match_is_full'] = match.sport.max_participants <= participant.count()
+        context_dictionary['match_accepted_participants'] = accepted_participant
+        context_dictionary['match_pending_participants'] = pending_participants
 
         # Set the user context values.
         context_dictionary['user_is_owner'] = participant is not None and participant.match is match and match.owner is request.user
