@@ -298,9 +298,14 @@ def match_view(request, match_id):
         profile = Profile.objects.get(user=request.user)
         match = Match.objects.get(id=match_id)
 
+        # Gets all of the participants.
+        participants = MatchParticipant.objects.filter(match=match, accepted=True)
+
         # Set the match context values.
         context_dictionary['match'] = match
         context_dictionary['match_is_in_past'] = match.is_in_past()
+        context_dictionary['match_is_full'] = match.sport.max_participants <= participant.count()
+        context_dictionary['match_participants'] = participant
 
         # Check if the user is participating.
         participant = None
