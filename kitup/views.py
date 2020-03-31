@@ -322,6 +322,26 @@ def match_report(request, participant_id):
         elif reported_participant.match.owner is request.user:
             return HttpResponse('You cannot report yourself')
 
+        # Check that the form is valid.
+        report_form = MatchParticipantReportForm(request.POST)
+        if not report_form.is_valid():
+            return HttpResponse('Invalid form')
+
+        # Create and save the report.
+        report = report_form.save(commit=False)
+        report.reporting_user = request.user
+        report.reported_user = reported_user
+        report.save()
+
+        # Increment the number of times the player is reported.
+        reported_profile.reported = reported_profile.reported + 1
+        reported_profile.save()
+
+        # If player reported more than once, kick then.
+        if reported_profile.reported >= 3:
+            reported_user.is_active = False
+            reported_user.save()
+
     except MatchParticipant.DoesNotExist:
         return HttpResponse('Failed to identify the participants')
 
