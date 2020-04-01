@@ -154,19 +154,16 @@ class ProfileForm(forms.ModelForm):
 
 # Form is submitted when reporting a match participant.
 class MatchParticipantReportForm(forms.ModelForm):
+
     # The generalised reason for the report.
     reason = forms.ChoiceField(
         choices=[(tag, tag.value) for tag in ReportReason],
-        help_text='Generalised reason for the report.')
+        help_text='Specify the reasoning for the report.')
 
     # The specific reasoning.
     desc = forms.CharField(
-<<<<<<< HEAD
-        min_length=MatchParticipantReport.REASON_DESC_MIN_LEN,
-=======
         widget=forms.Textarea(),
-        min_length=MatchParticipantReport.REASON_DESC_MIN_LEN, 
->>>>>>> aac453f88f373ef97b08790ba857a70f509dc4e9
+        min_length=MatchParticipantReport.REASON_DESC_MIN_LEN,
         max_length=MatchParticipantReport.REASON_DESC_MAX_LEN,
         help_text='Specify the reasoning for the report.')
 
