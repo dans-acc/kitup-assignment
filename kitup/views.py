@@ -10,25 +10,31 @@ from django.contrib.auth.models import User
 from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm, EmailPasswordRecovery, MatchParticipantReportForm
 from kitup.models import Profile, Sport, Match, MatchParticipant, MatchParticipantReport
 
-# The main index / home page for the website.
-# The main index / home page for the website.
+# The main index page for the website.
 def index(request):
 
-    # Get the first 30 matches.
+    # Get the most rescent matches taking place.
     matches = Match.objects.order_by('-start_datetime')[:30]
     context_dictionary = {'matches': matches}
 
+    # Obtain match data about the user.
     if request.user.is_authenticated:
 
-        # Determine whether the user is participating within the match.
+        # Determine if the player is participating in any of these matches.
+        user_matches = {}
         profile = Profile.objects.get(user=request.user)
         for match in matches:
+            try:
+                participant = MatchParticipant.objects.get(profile=profile, match=match)
+                user_matches[match.id] = participant
+            except MatchParticipant.DoesNotExist:
+                continue
 
-            match_dictionary = {}
-            
+        # Add the matches that the user is participating within.
+        context_dictionary['user_matches'] = user_matches    
 
-    response = render(request, 'kitup/index.html', context_dictionary)
-    return response
+    # Finally, render the index page.
+    return render(request, 'kitup/index.html', context_dictionary)
 
 
 # Invoked when the user wishes to register for the site.

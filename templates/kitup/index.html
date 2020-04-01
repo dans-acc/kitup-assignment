@@ -1,5 +1,6 @@
 {% extends 'kitup/base.html' %}
 {% load static %}
+{% load match_template_tags %}
 
 <!-- Override the title of the page. -->
 {% block title_block %}
@@ -94,10 +95,11 @@
 						<dt class="font-weight-light col-sm-4">Sport:</dt>
 						<dd class="col-sm-8">{{ match.sport.name }}</dd>
 						<dt class="font-weight-light col-sm-4">Date:</dt>
-						<dd class="col-sm-8">June, 6 10:20 until 11:20</dd>
+						<dd class="col-sm-8">{{ match.start_datetime }} to {{ match.end_time }}</dd>
 						<dt class="font-weight-light col-sm-4">Location:</dt>
 						<dd class="col-sm-8">35 Middleton Park, Brechin.</dd>
 					</dl>
+
 				</div>
 
 				<!-- Options for joining or leaving the match. -->
@@ -117,23 +119,30 @@
 
 								<!-- START: Cancel Match Button and Modal. -->
 								<div class="col-6 pr-1">
-									<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#cancelMatchConfirmationModal{{ match.id }}">Cancel Match</button>
-									<div class="modal fade" id="cancelMatchConfirmationModal{{ match.id }}" tabindex="-1" role="dialog" aria-labelledby="cancelMatchConfirmationModalTitle{{ match.id }}" aria-hidden="true">
+									<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#cancelMatch{{match.id}}Modal">Cancel Match</button>
+									<div class="modal fade" id="cancelMatch{{match.id}}Modal" tabindex="-1" role="dialog" aria-labelledby="cancelMatch{{match.id}}ModalTitle" aria-hidden="true">
 										<div class="modal-dialog modal-dialog-centered" role="document">
 											<div class="modal-content">
+												
+												<!-- The title of the confirmation box. -->
 												<div class="modal-header">
-													<h5 class="modal-title" id="cancelMatchConfirmationModalTitle{{ match.id }}">Cancel Match: {{ match.name }}</h5>
+													<h5 class="modal-title" id="cancelMatch{{match.id}}ModalTitle">Cancel Match: {{ match.name }}</h5>
 													<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 														<span aria-hidden="true">&times;</span>
 													</button>
 												</div>
+
+												<!-- The body of the confirmation box. -->
 												<div class="modal-body text-left">
-													<p>By clicking <q>Cancel</q> the match <q>{{ match.name }}</q> will be cancelled from running. Consequently, this match will no longer be accessible.</p>
+													<p>By cancelling the match, all participants will be removed and the event will be suspended indefinitely.</p>
 												</div>
+												
+												<!-- The options associated. -->
 												<div class="modal-footer">
 													<button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
 													<a class="btn btn-danger" href="{% url 'kitup:match_leave' match.id %}" role="button">Cancel Match</a>
 												</div>
+
 											</div>
 										</div>
 									</div>
@@ -142,10 +151,109 @@
 
 							{% else %}
 
-								{% if match in participating_matches or match in pending_matches %}
+								<!-- Get the participation instance. -->
+								{% get_match_participant match user as participant %}
+
+								<!-- Present options based on the users participation state. -->
+								{% if participant %}
+
+									<div class="col-6 pr-1">
+										
+										<!-- The button used to access the leave modal. -->
+										<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#leaveMatch{{match.id}}Modal">
+											{% if participant.accepted %}
+												Leave Match
+											{% else %}
+												Cancel Join Request
+											{% endif %}
+										</button>
+
+										<!-- START: Match leave modal. -->
+										<div class="modal fade" id="leaveMatch{{match.id}}Modal" tabindex="-1" role="dialog" aria-labelledby="leaveMatch{{match.id}}ModalTitle" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered" role="document">
+												<div class="modal-content">
+
+													<!-- The title of the confirmation box. -->
+													<div class="modal-header">
+														<h5 class="modal-title" id="leaveMatch{{match.id}}ModalTitle">Leave Match: {{ match.name }}</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+
+													<!-- The body of the confirmation box. -->
+													<div class="modal-body text-left">
+														<p>By leaving or cancelling the join request you will be removed from the match indefinitely (until you resubmit the join request).</p>
+													</div>
+
+													<!-- The options associated. -->
+													<div class="modal-footer">
+														<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+														<a class="btn btn-danger" href="{% url 'kitup:match_leave' match.id %}" role="button">
+															{% if participant.accepted %}
+																Leave Match
+															{% else %}
+																Cancel Join Request
+															{% endif %}
+														</a>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END: Match leave modal. -->
+
 								{% else %}
 
-									
+									<div class="col-6 pr-1">
+
+										{% is_match_full match as match_full %}
+
+										<!-- The button used to access the join modal. -->
+										<button type="button" class="btn btn-success w-100" data-toggle="modal" data-target="#joinMatch{{match.id}}Modal">
+											{% if match_full %}
+												Send Join Request
+											{% else %}
+												Join Match
+											{% endif %}
+										</button>
+
+										<!-- START: Join / send request for match modal. -->
+										<div class="modal fade" id="joinMatch{{match.id}}Modal" tabindex="-1" role="dialog" aria-labelledby="joinMatch{{match.id}}ModalTitle" aria-hidden="true">
+											<div class="modal-dialog modal-dialog-centered" role="document">
+												<div class="modal-content">
+
+													<!-- The title of the confirmation box. -->
+													<div class="modal-header">
+														<h5 class="modal-title" id="joinMatch{{match.id}}ModalTitle">Join Match: {{ match.name }}</h5>
+														<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+															<span aria-hidden="true">&times;</span>
+														</button>
+													</div>
+
+													<!-- The body of the confirmation box. -->
+													<div class="modal-body text-left">
+														<p>By joining or requesting to join a match you are required to abide by the terms and conditions of the site.</p>
+													</div>
+
+													<!-- The options associated. -->
+													<div class="modal-footer">
+														<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+														<a class="btn btn-success" href="{% url 'kitup:match_leave' match.id %}" role="button">
+															{% if match_full %}
+																Send Join Request
+															{% else %}
+																Join Match
+															{% endif %}
+														</a>
+													</div>
+
+												</div>
+											</div>
+										</div>
+									</div>
+									<!-- END: Join / send request for match modal. -->
 
 								{% endif %}
 
