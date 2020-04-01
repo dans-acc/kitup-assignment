@@ -36,6 +36,13 @@
 					<!-- Prevent session riding / one-click attack. -->
 					{% csrf_token %}
 
+					<!-- Alerts the user that the details provided are invalid. -->
+					{% for non_field_error in form.non_field_errors %}
+						<div class="row my-3 messages">
+								<div class="col text-danger">{{ non_field_error }}</div>
+						</div>
+					{% endfor %}
+
 					<div class="row my-3">
 						<div class="col"> {{ user_login_form.username | as_crispy_field }} </div>
 					</div>

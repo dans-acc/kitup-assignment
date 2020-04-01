@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -9,6 +10,7 @@ from django.contrib.auth.models import User
 from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm, EmailPasswordRecovery, MatchParticipantReportForm
 from kitup.models import Profile, Sport, Match, MatchParticipant, MatchParticipantReport
 
+# The main index / home page for the website.
 # The main index / home page for the website.
 def index(request):
     context_dictionary = {}
@@ -45,9 +47,9 @@ def user_register(request):
             profile.save()
 
             registered = True
+            return redirect(reverse('kitup:user_successful_reg'))
         else:
             print(user_form.errors, profile_form.errors)
-            return HttpResponse("Registration Failed") # For debugging purposes
 
     else:
         user_form = UserForm()
@@ -56,6 +58,13 @@ def user_register(request):
     # Render the template using the forms.
     response = render(request, 'kitup/user_register.html',
                       {'user_form': user_form, 'profile_form': profile_form, 'registered': registered})
+    return response
+
+# Invoked when a user successfully registers.
+def user_successful_reg(request):
+    context_dictionary = {}
+
+    response = render(request, 'kitup/user_successful_registration.html', context_dictionary)
     return response
 
 
@@ -81,7 +90,8 @@ def user_login(request):
                     return HttpResponse('Your KitUp account has been disabled.')
             else:
                 print(f'Invalid login details: {username} {password}')
-                return HttpResponse('Invalid details supplied.')
+                messages.error(request, "Invalid username and/or password!")
+                return render(request, 'kitup/user_login.html', {'user_login_form': user_login_form})
 
         else:
             print(user_login_form.errors)

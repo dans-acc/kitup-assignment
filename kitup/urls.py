@@ -22,6 +22,7 @@ urlpatterns = [
     path('', kitup_views.index, name='index'),
     
     path('register/', kitup_views.user_register, name='user_register'),
+    path('register_success/', kitup_views.user_successful_reg, name='user_successful_reg'),
     path('login/', kitup_views.user_login, name='user_login'),
     path('logout/', kitup_views.user_logout, name='user_logout'),
 

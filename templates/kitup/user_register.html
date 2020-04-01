@@ -44,6 +44,15 @@
 					<!-- Prevent session riding / one-click attack. -->
 					{% csrf_token %}
 
+					<!-- for DateField (which annoyingly won't render beneath the field whatsoever) and non matching email errors -->
+					{% if messages %}
+						<div class="row my-3 messages">
+							{% for message in messages %}
+								<div class="col text-danger {{ message.tags }}">{{ message }}</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+
 					<!-- Add the hidden fields from the user form. -->
 					{% for hidden in user_form.hidden_fields %}
 						{{ hidden }}
