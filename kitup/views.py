@@ -212,10 +212,74 @@ def user_settings(request):
 # The match creation form.
 @login_required
 def match_create(request):
-    match_create_form = MatchForm()
-    cd = {'match_creation_form': match_create_form}
-    response = render(request, 'kitup/match_create.html', cd)
-    return response
+
+    # If true, we're creating the match instance.
+    match_creation_form = None
+    if request.method == 'POST':
+        
+        # If the form is valid, create the match model, save it, and display it.
+        match_creation_from = MatchForm(request.POST)
+        if match_creation_from.is_valid():
+
+            # Create the instance of match, and set the sport type and match owner.
+            match = match_creation_from.save(commit=False)
+            match.sport = Sport.objects.get(id=match_creation_from.cleaned_data['sport_id'])
+            match.match_owner = request.user
+            match.save()
+
+            # Add the owner as a participant.
+            participant = MatchParticipant(user=Profile.objects.get(user=request.user), match=match)
+            participant.save()
+
+            # Finally, redirect the player so that they can view the match.
+            return redirect(reverse('kitup:match_view', kwargs = {'match_id': match.id}))
+        else:
+
+            # Print all of the errors associated with the fields.
+            print(match_creation_from.errors)
+    else:
+
+        # We are getting the form for the first time, return a new instance.
+        match_creation_from = MatchForm()
+
+    # Create the context dictionary and return the form.
+    context_dictionary = {
+        'match_creation_form': match_creation_from,
+    }
+    return render(request, 'kitup/match_create.html', context_dictionary)
+
+@login_required
+def match_edit(request, match_id):
+
+    # The user is submitting an existing match.
+    match_creation_from = None
+    if request.method == 'POST':
+
+        match_creation_from = MatchForm(request.POST)
+        print(f"{match_creation_from.cleaned_data['sport']}")
+
+        # Create the match form.
+        if match_creation_from.is_valid():
+            try:
+
+                # Attempt to edit the match.
+                match = Match.objects.get(id=match_id)
+                if match.owner != request.user:
+                    return HttpResponse('This match does not belong to you.')
+                elif match.is_in_past():
+                    return HttpResponse('This match cannot be edited')
+
+
+
+            except Match.DoesNotExist:
+                return HttpResponse('Match does not exist.')
+
+        else:
+            print(match_creation_from.errors)
+
+    else:
+        match_creation_from = MatchForm()
+
 
 # The user attempts to join the match.
 @login_required

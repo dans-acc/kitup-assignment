@@ -54,6 +54,27 @@ class Sport(models.Model):
     def __str__(self):
         return self.name
 
+# Defines the match location.
+class MatchLocation(models.Model):
+
+    # Constants.
+    NAME_MAX_LEN = 30
+    ADDRESS_MAX_LEN = 40
+    POST_CODE_MAX_LEN = 8
+    CITY_MAX_LEN = 30
+    LAT_LNG_MAX_DIGITS = 9
+    LAT_LNG_DECIMAL_PLACES = 6
+
+    # The name of the place.
+    name = models.CharField(max_length=NAME_MAX_LEN)
+    address = models.CharField(max_length=ADDRESS_MAX_LEN)
+    post_code = models.CharField(max_length=POST_CODE_MAX_LEN)
+    city = models.CharField(max_length=CITY_MAX_LEN)
+
+    # The latitude and longitude.
+    latitude = models.DecimalField(max_digits=LAT_LNG_MAX_DIGITS, decimal_places=LAT_LNG_DECIMAL_PLACES)
+    longitude = models.DecimalField(max_digits=LAT_LNG_MAX_DIGITS, decimal_places=LAT_LNG_DECIMAL_PLACES)
+
 
 # Model defines a match that has / is going to happened.
 class Match(models.Model):
@@ -74,6 +95,7 @@ class Match(models.Model):
     # Match times i.e. start date and time, and time it finishes.
     start_datetime = models.DateTimeField(null=False)
     end_time = models.TimeField(auto_now=False)
+    location = models.ForeignKey(MatchLocation, on_delete=models.CASCADE, null=False)
 
     # Restrictions on joining the match.
     min_age = models.IntegerField(default=MIN_AGE_DEFAULT)
@@ -111,7 +133,7 @@ class MatchParticipant(models.Model):
     # Model metadata.
     class Meta:
         unique_together = (('profile', 'match'),)
-        verbose_name_plural = 'Players'
+        verbose_name_plural = 'Match Participants'
 
     # Defines the name of the model.
     def __str__(self):
@@ -151,3 +173,7 @@ class MatchParticipantReport(models.Model):
     # A string representation of the report.
     def __str__(self):
         return self.id
+
+
+
+

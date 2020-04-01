@@ -73,10 +73,10 @@ class UserForm(forms.ModelForm):
 # MatchForm permits the creation of the Match model.
 class MatchForm(forms.ModelForm):
     # The sports from which to select.
-    # SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
+    #SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
 
     # The necessary fields that are used to create the match.
-    sport = forms.ChoiceField(help_text='The sport for which the match is being held.')
+    sport_id = forms.ChoiceField( help_text='The sport for which the match is being held.')
     name = forms.CharField(max_length=Match.NAME_MAX_LEN, help_text='The name of the match.')
 
     # Match when and where fields, respectively - time and address. 
