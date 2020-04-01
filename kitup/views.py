@@ -11,7 +11,20 @@ from kitup.models import Profile, Sport, Match, MatchParticipant, MatchParticipa
 
 # The main index / home page for the website.
 def index(request):
-    context_dictionary = {}
+
+    # Get the first 30 matches.
+    matches = Match.objects.order_by('-start_datetime')[:30]
+    context_dictionary = {'matches': matches}
+
+    if request.user.is_authenticated:
+
+        # Determine whether the user is participating within the match.
+        profile = Profile.objects.get(user=request.user)
+        for match in matches:
+
+            match_dictionary = {}
+            
+
     response = render(request, 'kitup/index.html', context_dictionary)
     return response
 
