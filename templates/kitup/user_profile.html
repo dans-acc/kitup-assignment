@@ -16,9 +16,9 @@
 
 <div class="container">
     <div class="col-md-12 row my-lg-5">
-        <div class="col-md-4">
+        <div class="col-md-2">
             <div class="portlet light profile-sidebar-portlet bordered">
-                <div class="profile-userpic">
+                <div class="profile-userpic text-center">
                     {% if profile_picture is not None %}
                         <img src="../../media/{{ profile_picture }}" class="img-responsive" alt=""></div>
                     {% else %}
@@ -35,7 +35,7 @@
                 -->
             </div>
         </div>
-        <div class="col-md-8">
+        <div class="col-lg-7 col-md-10">
             <div class="portlet light bordered">
                 <div class="portlet-title tabbable-line">
                     <div class="caption caption-md">
@@ -76,42 +76,80 @@
 
                             </div>
                             -->
-                            <div role="tabpanel" class="tab-pane active" id="overview">
+                            <div role="tabpanel" class="tab-pane active text-center" id="overview">
                                 <div class="profile-usertitle">
                                     <div class="profile-usertitle-name">Coming up Games</div>
                                 </div>
-                                <div class="row my-5">
-                                    <div class="col-lg-6 col-md-2 mb-4">
+                                <div class="row my-12">
+                                    <div class="col-lg-10 col-md-2 mb-4">
 
                                             <!-- Define the match description. -->
                                             {% if matches.len <= 0 %}
                                                 No upcoming Matches!
                                             {% else %}
                                                 {% for match in matches %}
-                                                    <div class="card h-100">
-                                                        <div class="card-body">
+                                                    {% if forloop.first %}<div class="row my-2">{% endif %}
+                                                        <div class="col-lg-9 col-md-6 mb-4">
+                                                            <div class="card h-100">
+                                                                <div class="card-body">
 
-                                                            <!-- The name of the match. -->
-                                                            <h4 class="card-title font-weight-light text-center">{{ match.name }}</h4>
+                                                                    <!-- The name of the match. -->
+                                                                    <h4 class="card-title font-weight-light text-center">{{ match.name }}</h4>
 
-                                                            <!-- General Description of match. -->
-                                                            <dl class="row card-text">
-                                                                <dt class="font-weight-light col-sm-4">Sport:</dt>
-                                                                <dd class="col-sm-8">{{ match.sport }}</dd>
-                                                                <dt class="font-weight-light col-sm-4">Date:</dt>
-                                                                <dd class="col-sm-8">{{ match.start_datetime }}</dd>
-                                                                <dt class="font-weight-light col-sm-4">Location:</dt>
-                                                                <dd class="col-sm-8"></dd>
-                                                            </dl>
+                                                                    <!-- General Description of match. -->
+                                                                    <dl class="row card-text">
+                                                                        <dt class="font-weight-light col-sm-4">Sport:</dt>
+                                                                        <dd class="col-sm-8">{{ match.sport }}</dd>
+                                                                        <dt class="font-weight-light col-sm-4">Date:</dt>
+                                                                        <dd class="col-sm-8">{{ match.start_datetime }}</dd>
+                                                                        <dt class="font-weight-light col-sm-4">Location:</dt>
+                                                                        <dd class="col-sm-8"></dd>
+                                                                    </dl>
+                                                                </div>
+
+                                                                <!-- Options for viewing or leaving the match. -->
+                                                                <div class="card-footer text-center">
+                                                                    {% if match.owner == user %}
+                                                                    <!-- START: Cancel Match Button and Modal. -->
+                                                                    <div class="col-6 pr-1">
+                                                                        <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#cancelMatchConfirmationModal{{ match.id }}">Cancel Match</button>
+                                                                        <div class="modal fade" id="cancelMatchConfirmationModal{{ match.id }}" tabindex="-1" role="dialog" aria-labelledby="cancelMatchConfirmationModalTitle{{ match.id }}" aria-hidden="true">
+                                                                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                                <div class="modal-content">
+                                                                                    <div class="modal-header">
+                                                                                        <h5 class="modal-title" id="cancelMatchConfirmationModalTitle{{ match.id }}">Cancel Match: {{ match.name }}</h5>
+                                                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                            <span aria-hidden="true">&times;</span>
+                                                                                        </button>
+                                                                                    </div>
+                                                                                    <div class="modal-body text-left">
+                                                                                        <p>By clicking <q>Cancel</q> the match <q>{{ match.name }}</q> will be cancelled from running. Consequently, this match will no longer be accessible.</p>
+                                                                                    </div>
+                                                                                    <div class="modal-footer">
+                                                                                        <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                                                                                        <a class="btn btn-danger" href="{% url 'kitup:match_leave' match.id %}" role="button">Cancel Match</a>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- END: Cancel Match Button and Modal. -->
+
+                                                                    {% else %}
+                                                                        <a class="btn btn-danger" href="{% url 'kitup:match_leave' match.id %}" role="button">Leave</a>
+                                                                    {% endif %}
+                                                                    <a class="btn btn-dark" href="{% url 'kitup:match_view' match.id %}" role="button">View Details</a>
+                                                                </div>
+
+                                                            </div>
                                                         </div>
-
-                                                        <!-- Options for joining or leaving the match. -->
-                                                        <div class="card-footer text-center">
-                                                            <a class="btn btn-dark" href="#" role="button">View Details</a>
-                                                        </div>
-
                                                     </div>
+                                        <!-- Process rows. -->
+                                        {% if forloop.last %}
                                                 </div>
+                                         {% else %}
+                                            {% if forloop.counter|divisibleby:"2" %}</div><div class="row">{% endif %}
+                                        {% endif %}
                                             {% endfor %}
                                         {% endif %}
                                     </div>
