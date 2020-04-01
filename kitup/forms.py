@@ -73,10 +73,11 @@ class UserForm(forms.ModelForm):
 # MatchForm permits the creation of the Match model.
 class MatchForm(forms.ModelForm):
     # The sports from which to select.
-    #SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
+    SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
+    LOCATION_CHOICES = [(location.id, f"{location.address}, {location.post_code}, {location.city} ({location.name})") for location in Sport.objects.all()]
 
     # The necessary fields that are used to create the match.
-    sport_id = forms.ChoiceField( help_text='The sport for which the match is being held.')
+    sport_id = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='The sport for which the match is being held.')
     name = forms.CharField(max_length=Match.NAME_MAX_LEN, help_text='The name of the match.')
 
     # Match when and where fields, respectively - time and address. 
@@ -99,6 +100,8 @@ class MatchForm(forms.ModelForm):
         ),
         help_text='The time at which the match is expected to end.'
     )
+    location_id = forms.ChoiceField(choices=LOCATION_CHOICES, help_text='A trusted location at which the match will take place.')
+
 
     # Match participant restriction fields - age and ranking limitations.
     min_age = forms.IntegerField(initial=Match.MIN_AGE_DEFAULT, help_text='Minimum participating age.')
@@ -108,7 +111,7 @@ class MatchForm(forms.ModelForm):
     # Meta class defines the model and the fields that are to be displayed.
     class Meta:
         model = Match
-        fields = ('sport', 'name', 'start_datetime', 'end_time', 'min_age', 'max_age', 'min_rating')
+        fields = ('sport_id', 'name', 'start_datetime', 'end_time', 'min_age', 'max_age', 'min_rating')
 
 
 # Form defines the necessary fields for creating a profile model.

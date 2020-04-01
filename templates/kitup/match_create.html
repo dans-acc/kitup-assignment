@@ -54,7 +54,7 @@ Create a Match!
 
 			<!-- Define the row that displays the sport types from which to select. -->
 			<div class="row my-3">
-				<div class="col"> {{ match_creation_form.sport | as_crispy_field }} </div>
+				<div class="col"> {{ match_creation_form.sport_id | as_crispy_field }} </div>
 			</div>
 
 			<!-- Defien the row that accepts the name of the match. -->
@@ -80,6 +80,7 @@ Create a Match!
 			<!-- Defines the fields that are to be used for defining the address
 			of the match i.e. where it is taking place. -->
 			<div class="row my-3">
+				<div class="col">{{ match_creation_form.location_id | as_crispy_field }}</div>
 			</div>
 
 			<!-- Split the section; section title for participant restrictions. -->
