@@ -36,6 +36,15 @@
 					<!-- Prevent session riding / one-click attack. -->
 					{% csrf_token %}
 
+					<!-- Alerts the user that the details provided are invalid. -->
+					{% if messages %}
+						<div class="row my-3 messages">
+							{% for message in messages %}
+								<div class="col text-danger {{ message.tags }}">{{ message }}</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+
 					<div class="row my-3">
 						<div class="col"> {{ user_login_form.username | as_crispy_field }} </div>
 					</div>
