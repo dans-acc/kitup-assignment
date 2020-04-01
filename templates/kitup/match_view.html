@@ -1,5 +1,6 @@
 {% extends 'kitup/base.html' %}
 {% load crispy_forms_tags %}
+{% load match_template_tags %}
 
 <!-- Overwrite the title of the page. -->
 {% block title_block %}
@@ -92,7 +93,7 @@ Viewing Match
 						{% if user_participant is None %}
 
 							<!-- Determine the button logo for joining the match. -->
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#joinMatchModal">
+							<button type="button" class="btn btn-success" data-toggle="modal" data-target="#joinMatchModal">
 								{% if match.private or match_is_full %}
 									Send Join Request
 								{% else %}
@@ -140,7 +141,7 @@ Viewing Match
 						{% else %}
 
 							<!-- The type of button that's to be displayed to the user for leaving the match. -->
-							<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#joinMatchModal">
+							<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#joinMatchModal">
 								{% if user_participant.accepted %}
 									Leave Match
 								{% else %}
@@ -186,6 +187,13 @@ Viewing Match
 
 
 						{% endif %}
+
+						<!-- Display the match owner profile. -->
+						{% get_match_owner_profile match.owner as match_owner_profile %}
+						{% if match_owner_profile %}
+							<a href="{% url 'kitup:user_view_profile' match_owner_profile.id %}" class="btn btn-dark" role="button">Match Owner</a>
+						{% endif %}
+
 					{% endif %}
 				{% else %}
 
@@ -193,6 +201,8 @@ Viewing Match
 					<a class="btn btn-success" href="{% url 'kitup:user_login' %}" role="button">Login to Join</a>
 
 				{% endif %}
+
+
 			{% endif %}
 
 		</div>
@@ -231,11 +241,13 @@ Viewing Match
 				<div class="card-footer">
 
 					<!-- Display appropriate options. -->
-					{% if not user.is_authenticated or user_participant is None or not user_participant.accepted %}
+					{% if not user.is_authenticated %}
+						<a class="btn btn-dark w-100" href="{% url 'kitup:user_login' %}" role="button">Login to View</a>
+					{% elif user_participant is None or not user_participant.accepted %}
 
 						<!-- Not logged in, view the profile. -->
 						<a class="btn btn-dark w-100" href="{% url 'kitup:user_view_profile' participant.profile.id %}" 
-						role="button">View x</a>
+						role="button">View</a>
 
 					{% else %}
 
@@ -246,11 +258,11 @@ Viewing Match
 									<a class="btn btn-success w-100" href="#" role="button">Rate</a>
 								</div>
 								<div class="col pl-1">
-									<a class="btn btn-dark w-100" href="#" role="button">View</a>
+									<a class="btn btn-dark w-100" href="{% url 'kitup:user_view_profile' participant.profile.id %}" role="button">View</a>
 								</div>
 							{% else %}
 								<div class="col">
-									<a class="btn btn-dark w-100" href="#" role="button">View</a>
+									<a class="btn btn-dark w-100" href="{% url 'kitup:user_view_profile' participant.profile.id %}" role="button">View</a>
 								</div>
 							{% endif %}
 						</div>
@@ -265,17 +277,21 @@ Viewing Match
 
 
 										<!-- START: Report player form modal. -->
-										<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#reportParticipantFormModal">Report</button>
-										<div class="modal fade" id="reportParticipantFormModal" tabindex="-1" role="dialog" aria-labelledby="reportParticipantFormModalTitle" aria-hidden="true">
+										<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#reportParticipant{{ participant.id }}Modal">Report</button>
+										<div class="modal fade" id="reportParticipant{{ participant.id }}Modal" tabindex="-1" role="dialog" aria-labelledby="reportParticipant{{ participant.id }}ModalTitle" aria-hidden="true">
 											<div class="modal-dialog modal-dialog-centered" role="document">
 												<div class="modal-content">
 													<form id="report_participant_form" method="post">
+														
+														<!-- The title, the player that is being reported. -->
 														<div class="modal-header">
-															<h5 class="modal-title" id="reportFormModalTitle">Report Participant: {{ participant.profile.user.username }}</h5>
+															<h5 class="modal-title" id="reportParticipant{{ participant.id }}ModalTitle">Report Participant: {{ participant.profile.user.username }}</h5>
 															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 																<span aria-hidden="true">&times;</span>
 															</button>
 														</div>
+
+														<!-- The body of the modal is the form for submitting reports. -->
 														<div class="modal-body">
 															<div class="row my-3">
 																<div class="col"> {{ report_participant_form.reason | as_crispy_field }} </div>
@@ -285,10 +301,13 @@ Viewing Match
 																<div class="col"> {{ report_participant_form.desc | as_crispy_field }} </div>
 															</div>
 														</div>
+
+														<!-- The options for submitting or cancelling the report. -->
 														<div class="modal-footer">
 															<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
 															<a class="btn btn-success" href="{% url 'kitup:match_report' participant.id %}" role="button">Submit Report</a>
 														</div>
+
 													</form>
 												</div>
 											</div>
@@ -307,26 +326,29 @@ Viewing Match
 										<div class="col">
 
 											<!-- Start: Kick participant modal. -->
-											<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#kickParticipantModal">Kick</button>
-											<div class="modal fade" id="kickParticipantModal" tabindex="-1" role="dialog" aria-labelledby="kickParticipantModalTitle" aria-hidden="true">
+											<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#kickParticipant{{ participant.id }}Modal">Kick</button>
+											<div class="modal fade" id="kickParticipant{{ participant.id }}Modal" tabindex="-1" role="dialog" aria-labelledby="kickParticipant{{ participant.id }}ModalTitle" aria-hidden="true">
 												<div class="modal-dialog modal-dialog-centered" role="document">
 													<div class="modal-content">
 														<form id="participant_kick_form" method="post">
 															
+															<!-- Display the kick participant title. -->
 															<div class="modal-header">
-																<h5 class="modal-title" id="kickParticipantModalTitle">Kick Match Participant: {{ participant.profile.user.username }}</h5>
+																<h5 class="modal-title" id="kickParticipant{{ participant.id }}ModalTitle">Kick Match Participant: {{ participant.profile.user.username }}</h5>
 																<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 																	<span aria-hidden="true">&times;</span>
 																</button>
 															</div>
 
+															<!-- Display the conseqience of kicking someone fromt he match. -->
 															<div class="modal-body">
 																<p>By clicking <q>Kick Participant</q> the corresponding user ({{ participant.profile.user.username}}) will be kicked from the match.</p>
 															</div>
 
+															<!-- Display the buttons for the participant. -->
 															<div class="modal-footer">
 																<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-																<a class="btn btn-success" href="{% url 'kitup:match_kick' participant.id %}" role="button">Kick Participant</a>
+																<a class="btn btn-danger" href="{% url 'kitup:match_kick' participant.id %}" role="button">Kick Participant</a>
 															</div>
 
 														</form>

@@ -465,6 +465,8 @@ def match_view(request, match_id):
         match = Match.objects.get(id=match_id)
         accepted_participants = MatchParticipant.objects.filter(match=match, accepted=True)
 
+        print(f'{match.name}')
+
         profile = None
         participant = None
         is_owner = False
@@ -472,6 +474,8 @@ def match_view(request, match_id):
 
         # If the user can be authenticated, update fields accordingly.
         if request.user.is_authenticated:
+
+            print(f'{request.user.username}')
 
             # Update the context variables.
             profile = Profile.objects.get(user=request.user)
