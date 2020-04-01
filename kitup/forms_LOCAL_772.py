@@ -161,12 +161,7 @@ class MatchParticipantReportForm(forms.ModelForm):
 
     # The specific reasoning.
     desc = forms.CharField(
-<<<<<<< HEAD
         min_length=MatchParticipantReport.REASON_DESC_MIN_LEN,
-=======
-        widget=forms.Textarea(),
-        min_length=MatchParticipantReport.REASON_DESC_MIN_LEN, 
->>>>>>> aac453f88f373ef97b08790ba857a70f509dc4e9
         max_length=MatchParticipantReport.REASON_DESC_MAX_LEN,
         help_text='Specify the reasoning for the report.')
 

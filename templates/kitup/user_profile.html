@@ -19,7 +19,11 @@
         <div class="col-md-4">
             <div class="portlet light profile-sidebar-portlet bordered">
                 <div class="profile-userpic">
-                    <img src="../../media/default_profile_photo.png" class="img-responsive" alt=""></div>
+                    {% if profile_picture is not None %}
+                        <img src="../../media/{{ profile_picture }}" class="img-responsive" alt=""></div>
+                    {% else %}
+                        <img src="../../media/default_profile_photo.png" class="img-responsive" alt=""></div>
+                    {% endif %}
                 <div class="profile-usertitle">
                     <div class="profile-usertitle-name">{{ first_name }} {{ last_name }}</div>
                     <div class="profile-rating">Rating: {{ rating }}/5.0</div>
@@ -45,7 +49,7 @@
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="active"><a href="#overview" aria-controls="overview" role="tab" data-toggle="tab">Overview</a></li>
                            <!-- <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li> -->
-                            <li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">History</a></li>
+                            <!--<li role="presentation"><a href="#history" aria-controls="history" role="tab" data-toggle="tab">History</a></li>-->
                         </ul>
 
                         <!-- Tab panes -->

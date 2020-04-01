@@ -1,12 +1,8 @@
 import datetime
 
 from django import forms
-from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
 from django.core.exceptions import ValidationError
-from django.utils.safestring import mark_safe
-from django.urls import reverse
 
 from tempus_dominus import widgets as tdWidgets
 from django.contrib.admin import widgets as adminWidgets
@@ -18,6 +14,7 @@ from kitup.models import Profile, Sport, Match, MatchParticipant, MatchParticipa
 # Thus, this form should be used for the creation of the user and 
 # the associated profile.
 class UserForm(forms.ModelForm):
+
     # Overwrite the User models fields.
     username = forms.CharField(min_length=Profile.USER_USERNAME_MIN_LEN, max_length=Profile.USER_USERNAME_MAX_LEN,
                                help_text='The name visible to other users of the site.')
@@ -25,8 +22,7 @@ class UserForm(forms.ModelForm):
     last_name = forms.CharField(help_text='Your last name; not visible to users.')
     email = forms.EmailField(help_text='A valid email address associated with the account.')
     confirm_email = forms.EmailField(help_text='Confirm your email address.')
-    password = forms.CharField(widget=forms.PasswordInput(),
-                               help_text='Your account password - used for logging in. Minimum 8 characters required')
+    password = forms.CharField(widget=forms.PasswordInput(), help_text='Your account password - used for logging in. Minimum 8 characters required')
     confirm_password = forms.CharField(widget=forms.PasswordInput(), help_text='Confirm your password.')
 
     # The meta data class, defines the model and fields.
@@ -43,6 +39,20 @@ class UserForm(forms.ModelForm):
 
         return cd['confirm_password']
 
+    def clean_email(self):
+        # Get the email
+        email = self.cleaned_data.get('email')
+
+        # Check to see if any users already exist with this email as a username.
+        try:
+            match = User.objects.get(email=email)
+        except User.DoesNotExist:
+            # Unable to find a user, this is fine
+            return email
+
+        # A user was found with this as a username, raise an error.
+        raise forms.ValidationError('This email address is already in use.')
+
     # Checks whether or not email exists in the database for a new user registering.
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -52,11 +62,9 @@ class UserForm(forms.ModelForm):
         except User.DoesNotExist:
             return email
 
-        text = "This email address is already in use by another user. Please use <a href='%s'>Password Recovery</a> " \
-               "if you can't login to your account" % reverse('kitup:password_reset')
-
         # Raises an error if an email already exists for a user.
-        raise forms.ValidationError(mark_safe(text))
+        raise forms.ValidationError('This email address is already in use. Please use Password Recovery if you cant login')
+
 
     # Verifies if the email addresses provided match or not.
     def clean(self):
@@ -72,8 +80,9 @@ class UserForm(forms.ModelForm):
 
 # MatchForm permits the creation of the Match model.
 class MatchForm(forms.ModelForm):
+
     # The sports from which to select.
-    # SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
+    #SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
 
     # The necessary fields that are used to create the match.
     sport = forms.ChoiceField(help_text='The sport for which the match is being held.')
@@ -95,7 +104,7 @@ class MatchForm(forms.ModelForm):
     )
     end_time = forms.TimeField(
         widget=tdWidgets.TimePicker(
-            attrs={'input_toggle': True, 'input_group': False, }
+            attrs={'input_toggle': True, 'input_group': False,}
         ),
         help_text='The time at which the match is expected to end.'
     )
@@ -111,10 +120,17 @@ class MatchForm(forms.ModelForm):
         fields = ('sport', 'name', 'start_datetime', 'end_time', 'min_age', 'max_age', 'min_rating')
 
 
+
+
+
+
+
+
 # Form defines the necessary fields for creating a profile model.
 # Thus, this from should be used for the creation of the user in conjunction
 # with the UserForm form.
 class ProfileForm(forms.ModelForm):
+
     # Form fields required in order to create a profile.
     profile_picture = forms.ImageField(help_text='Please provide a profile picture.')
     date_of_birth = forms.DateField(
@@ -128,7 +144,7 @@ class ProfileForm(forms.ModelForm):
                 'icon_toggle': True,
             }
         ),
-        initial=datetime.date.today,
+        initial=datetime.date.today, 
         help_text='Please specify your date of birth.'
     )
 
@@ -141,32 +157,29 @@ class ProfileForm(forms.ModelForm):
         model = Profile
         fields = ('date_of_birth', 'profile_picture',)
 
-    '''
     # Checks whether or not the user has provided a date in the future or not
     def clean(self):
         data = super(ProfileForm, self).clean()
+        date_of_birth = data.get('date_of_birth')
         current_date = datetime.date.today()
 
-        if data['date_of_birth'] >= current_date:
+        if date_of_birth >= current_date:
             raise forms.ValidationError("You cannot choose a future date!")
-        return self.data
-    '''
+        return data
+
 
 # Form is submitted when reporting a match participant.
 class MatchParticipantReportForm(forms.ModelForm):
+
     # The generalised reason for the report.
     reason = forms.ChoiceField(
-        choices=[(tag, tag.value) for tag in ReportReason],
+        choices=[(tag, tag.value) for tag in ReportReason], 
         help_text='Generalised reason for the report.')
 
     # The specific reasoning.
     desc = forms.CharField(
-<<<<<<< HEAD
-        min_length=MatchParticipantReport.REASON_DESC_MIN_LEN,
-=======
         widget=forms.Textarea(),
         min_length=MatchParticipantReport.REASON_DESC_MIN_LEN, 
->>>>>>> aac453f88f373ef97b08790ba857a70f509dc4e9
         max_length=MatchParticipantReport.REASON_DESC_MAX_LEN,
         help_text='Specify the reasoning for the report.')
 
@@ -178,14 +191,14 @@ class MatchParticipantReportForm(forms.ModelForm):
 
 # Defines a form that's to be used for logging in.
 class UserLoginForm(forms.Form):
+
     # Profile the fields for logging in.
-    username = forms.CharField(required=True, max_length=30, help_text='Account username.')
+    username = forms.CharField(required=True,max_length=30,help_text='Account username.')
     password = forms.CharField(widget=forms.PasswordInput(), help_text='Account password.')
 
     # Meta class defines the visible form fields.
     class Meta:
         fields = ('username', 'password')
-
 
 
 # Defines a form for the user to update their user specific information

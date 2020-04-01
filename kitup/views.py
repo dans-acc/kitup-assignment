@@ -163,6 +163,10 @@ def user_profile(request):
         context_dictionary['last_name'] = user_meta_data.last_name
         context_dictionary['email'] = user_meta_data.email
         context_dictionary['rating'] = profile.rating
+        if profile.profile_picture is not None:
+            context_dictionary['profile_picture'] = profile.profile_picture
+        else:
+            context_dictionary['profile_picture'] = None
         context_dictionary['matches'] = matches
 
         #print(user_meta_data.Profile.strikes)
@@ -454,7 +458,7 @@ def match_view(request, match_id):
             profile = Profile.objects.get(user=request.user)
             if MatchParticipant.objects.filter(profile=profile, match=match).exists():
                 participant = MatchParticipant.objects.get(profile=profile, match=match)
-            is_owner = participant is not None and participant.match is match and match.owner is request.user
+            is_owner = participant is not None and participant.match == match and match.owner == request.user
             if is_owner:
                 pending_participants = MatchParticipant.objects.filter(match=match, accepted=False)
 
@@ -468,6 +472,9 @@ def match_view(request, match_id):
         # Set the user context values.
         context_dictionary['user_is_owner'] = is_owner
         context_dictionary['user_participant'] = participant
+
+        # Add any of the page forms.
+        context_dictionary['report_participant_form'] = MatchParticipantReportForm()
 
         print(context_dictionary)
 
