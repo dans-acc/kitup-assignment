@@ -361,7 +361,7 @@ def match_leave(request, match_id):
             return redirect(reverse('kitup:web_response'))
 
         # The match owner has deleted their match, return to index.
-        if match.owner is request.user:
+        if match.owner == request.user:
             match.delete()
             return redirect(reverse('kitup:index'))
 
@@ -370,7 +370,8 @@ def match_leave(request, match_id):
             #return HttpResponse('You are not a participant')
             messages.error(request, "You are not a participant")
             return redirect(reverse('kitup:web_response'))
-        participant = MatchParticipant(profile=profile,match=match)
+        
+        participant = MatchParticipant.objects.get(profile=profile,match=match)
         participant.delete()
 
     except Match.DoesNotExist:
@@ -380,58 +381,6 @@ def match_leave(request, match_id):
 
     # Redirect them back to the match view page.
     return redirect(reverse('kitup:match_view', kwargs={'match_id': match.id}))
-
-'''
-# Permits the user to report the player for a variety of reasons.
-@login_required
-def match_report(request, match_id, reported_user_id):
-
-    try:
-
-        # Get the match for which the participant is being reported.
-        match = Match.objects.get(id=match_id)
-
-        # Check that the match is in the past.
-        if not match.is_in_past():
-            return HttpResponse('Match not in past, cannot report.')
-        elif request.user.id is reported_user_id:
-            return HttpResponse('You cannot report yourself')
-
-        # Check that the reporting user is a participant.
-        reporting_profile = Profile.objects.get(user=request.user)
-        if not MatchParticipant.objects.filter(profile=reporting_profile, match=match).exists():
-            return HttpResponse('Youre not a participant')
-        reporting_participant = MatchParticipant.objects.get(profile=reporting_profile, match=match)
-        if not reporting_participant.accepted:
-            return HttpResponse('Cannot report, not part of the match.')
-
-        # Check that the user participated in the match.
-        reported_user = User.objects.get(id=reported_user_id)
-        reported_profile = Profile.objects.get(user=reported_user)
-        if not MatchParticipant.objects.filter(profile=reported_profile, match=match).exists():
-            return HttpResponse('Reported user not part of the match.')
-        reported_participant = MatchParticipant.objects.get(profile=reported_profile, match=match)
-        if not reported_participant.accepted:
-            return HttpResponse('Player did not participate in this match.')
-
-        # Validate the form.
-        report_form = MatchParticipantReportForm(request.POST)
-        if not report_form.is_valid():
-            return HttpResponse('Invalid form')
-
-        # Finally, create and save the report.
-        report = report_form.save(commit=False)
-        report.reporting_user = request.user
-        report.reported_user = reported_user
-        report.save()
-
-    except Match.DoesNotExist:
-        return HttpResponse('Match not found')
-    except User.DoesNotExist:
-        return HttpResponse('User does not exist')
-
-    return HttpResponse('Report successfully submitted')
-'''
 
 # A simplified means of reporting the participant.
 @login_required

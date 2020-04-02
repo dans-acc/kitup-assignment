@@ -129,7 +129,6 @@ class MatchParticipant(models.Model):
 
     # Model metadata.
     class Meta:
-        unique_together = (('profile', 'match'),)
         verbose_name_plural = 'Match Participants'
 
     # Defines the name of the model.
