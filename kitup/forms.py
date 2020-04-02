@@ -84,17 +84,21 @@ class MatchForm(forms.ModelForm):
         widget=tdWidgets.DateTimePicker(
             options={
                 'useCurrent': True,
-                'collapse': False,
+                'collapse': True,
+                'format': 'DD/MM/YYYY HH:mm',
             },
             attrs={
                 'append': 'fa fa-calendar',
                 'icon_toggle': True,
-            }
+            },
         ),
         help_text='Start date and time of the match.'
     )
     end_time = forms.TimeField(
         widget=tdWidgets.TimePicker(
+            options={
+                'format': 'HH:mm',
+            },
             attrs={'input_toggle': True, 'input_group': False, }
         ),
         help_text='The time at which the match is expected to end.'
@@ -181,8 +185,6 @@ class UserLoginForm(forms.Form):
     # Meta class defines the visible form fields.
     class Meta:
         fields = ('username', 'password')
-
-
 
 # Defines a form for the user to update their user specific information
 class UserUpdateForm(forms.Form):
