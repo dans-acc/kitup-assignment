@@ -47,10 +47,9 @@
 					<!-- for DateField (which annoyingly won't render beneath the field whatsoever) and non matching email errors -->
 					{% for non_field_error in user_form.non_field_errors %}
 						<div class="row my-3">
-								<div class="col text-danger">{{ non_field_error }}</div>
+							<div class="col text-danger">{{ non_field_error }}</div>
 						</div>
 					{% endfor %}
-
 
 					<!-- Add the hidden fields from the user form. -->
 					{% for hidden in user_form.hidden_fields %}
