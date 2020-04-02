@@ -234,11 +234,11 @@ def match_create(request):
             match.save()
 
             # Create an instance of the participant.
-            participant = MatchParticipant(profile=Profile.objects.get(user=request.user), match=match)
+            participant = MatchParticipant(profile=Profile.objects.get(user=request.user), match=match, accepted=True)
             participant.save()
 
             # Redirect the user to the created match page.
-            return redirect(reverse('kitup:match_view', kwargs={'match_id': match_id}))
+            return redirect(reverse('kitup:match_view', kwargs={'match_id': match.id}))
         else:
             print(match_form.errors)
     else:

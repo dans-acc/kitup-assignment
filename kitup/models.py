@@ -160,7 +160,7 @@ class MatchParticipantReport(models.Model):
 
     # Model metadata.
     class Meta:
-        verbose_name_plural = 'Player Reports'
+        verbose_name_plural = 'Reported Participants'
 
     # A string representation of the report.
     def __str__(self):
