@@ -45,6 +45,7 @@ class Sport(models.Model):
     # The name of the sport and individual team-sizes.
     name = models.CharField(max_length=NAME_MAX_LEN)
     max_participants = models.IntegerField()
+    sport_picture = models.ImageField(upload_to='sport_images')
 
     # Model metadata.
     class Meta:
