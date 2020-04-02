@@ -11,20 +11,17 @@ class Profile(models.Model):
     USER_USERNAME_MIN_LEN = 8
     USER_USERNAME_MAX_LEN = 16
 
-    # Profile constants.
+    # Restrictions.
     MIN_AGE = 14
 
+    # Defaults.
     RATING_DEFAULT = 0
 
     # Additional user attributes.
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     profile_picture = models.ImageField(upload_to='profile_images')
     date_of_birth = models.DateField(null=False)
-
-    # The users current rating.
     rating = models.FloatField(default=RATING_DEFAULT)
-
-    # The number of times the user has been reported.
     reported = models.IntegerField(default=0)
 
     # Model meta data.
@@ -58,7 +55,7 @@ class Sport(models.Model):
 # Defines the match location.
 class MatchLocation(models.Model):
 
-    # Constants.
+    # Restrictions.
     NAME_MAX_LEN = 30
     ADDRESS_MAX_LEN = 40
     POST_CODE_MAX_LEN = 8
@@ -66,44 +63,45 @@ class MatchLocation(models.Model):
     LAT_LNG_MAX_DIGITS = 9
     LAT_LNG_DECIMAL_PLACES = 6
 
-    # The name of the place.
+    # Attributes defining the match location.
     name = models.CharField(max_length=NAME_MAX_LEN)
     address = models.CharField(max_length=ADDRESS_MAX_LEN)
     post_code = models.CharField(max_length=POST_CODE_MAX_LEN)
     city = models.CharField(max_length=CITY_MAX_LEN)
-
-    # The latitude and longitude.
     latitude = models.DecimalField(max_digits=LAT_LNG_MAX_DIGITS, decimal_places=LAT_LNG_DECIMAL_PLACES)
     longitude = models.DecimalField(max_digits=LAT_LNG_MAX_DIGITS, decimal_places=LAT_LNG_DECIMAL_PLACES)
+
+    # Defines the model metadata.
+    class Meta:
+        verbose_name_plural = 'Match Locations'
+
+    # A user friendly name for the model.
+    def __str__(self):
+        return self.name
 
 
 # Model defines a match that has / is going to happened.
 class Match(models.Model):
     
-    # Constants.
+    # Restrictions.
     NAME_MAX_LEN = 30
 
+    # Defaults.
     MIN_AGE_DEFAULT = Profile.MIN_AGE
     MAX_AGE_DEFAULT = 70
     MIN_RATING_DEFAULT = 0
     PRIVATE_DEFAULT = False
 
-    # Attributes pertaining to the match type.
+    # Attributes defining the match.
     sport = models.ForeignKey(Sport, on_delete=models.CASCADE, null=False)
     name = models.CharField(max_length=NAME_MAX_LEN, null=False)
     owner = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
-
-    # Match times i.e. start date and time, and time it finishes.
     start_datetime = models.DateTimeField(null=False)
     end_time = models.TimeField(auto_now=False)
     location = models.ForeignKey(MatchLocation, on_delete=models.CASCADE, null=False)
-
-    # Restrictions on joining the match.
     min_age = models.IntegerField(default=MIN_AGE_DEFAULT)
     max_age = models.IntegerField(default=MAX_AGE_DEFAULT)
     min_rating = models.IntegerField(default=MIN_RATING_DEFAULT)
-
-    # Whether the match is private.
     private = models.BooleanField(default=PRIVATE_DEFAULT, null=False)
 
     # Whether the match is in the past.
@@ -121,14 +119,12 @@ class Match(models.Model):
 # Represents a match participant. Also, represents a request.
 class MatchParticipant(models.Model):
 
-    # Constants.
+    # Defaults.
     ACCEPTED_DEFAULT = False
 
-    # The user (profile) and the match in which their participating.
+    # Attributes defining the match participant.
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-
-    # Represents whether they've been accepted or not.
     accepted = models.BooleanField(default=ACCEPTED_DEFAULT, null=False)
 
     # Model metadata.
@@ -156,14 +152,10 @@ class MatchParticipantReport(models.Model):
     REASON_DESC_MIN_LEN = 10
     REASON_DESC_MAX_LEN = 80
 
-    # Since there aren't chats, you can only report them from matches.
+    # Attributes defining match report.
     match = models.ForeignKey(Match, on_delete=models.CASCADE)
-
-    # The reporting and reported player.
     reporting_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reporting_user')
     reported_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='reported_user')
-
-    # The reason category and description, respectively.
     reason = models.CharField(max_length=REASON_MAX_LEN, null=False, choices=[(tag, tag.value) for tag in ReportReason])
     desc = models.CharField(max_length=REASON_DESC_MAX_LEN, null=False)
 

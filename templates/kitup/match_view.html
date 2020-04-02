@@ -59,7 +59,7 @@ Viewing Match
 
 						<!-- Display owner related options. -->
 						<a class="btn btn-success" href="#" role="button">Match Requests</a>
-						<a class="btn btn-dark" href="#" role="button">Edit Details</a>
+						<a class="btn btn-dark" href="{% url 'kitup:match_edit' match.id %}" role="button">Edit Details</a>
 						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelMatchConfirmationModal">Cancel Match</button>
 
 						<!-- Modal for displaying the requests. -->

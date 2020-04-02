@@ -11,7 +11,7 @@ from django.urls import reverse
 from tempus_dominus import widgets as tdWidgets
 from django.contrib.admin import widgets as adminWidgets
 
-from kitup.models import Profile, Sport, Match, MatchParticipant, MatchParticipantReport, ReportReason
+from kitup.models import Profile, Sport, MatchLocation, Match, MatchParticipant, MatchParticipantReport, ReportReason
 
 
 # Form is used for the creation of djangos default User model.
@@ -70,17 +70,16 @@ class UserForm(forms.ModelForm):
         return cleaned_data
 
 
-# MatchForm permits the creation of the Match model.
+# Form is used to instantiate an instance of Match.
 class MatchForm(forms.ModelForm):
-    # The sports from which to select.
+    
+    # Used to populate a pre-defined set of choices.
     SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
-    LOCATION_CHOICES = [(location.id, f"{location.address}, {location.post_code}, {location.city} ({location.name})") for location in Sport.objects.all()]
+    LOCATION_CHOICES = [(location.id, f"{location.address}, {location.post_code}, {location.city} ({location.name})") for location in MatchLocation.objects.all()]
 
-    # The necessary fields that are used to create the match.
+    # The fields that are utilised to create the match.
     sport_id = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='The sport for which the match is being held.')
     name = forms.CharField(max_length=Match.NAME_MAX_LEN, help_text='The name of the match.')
-
-    # Match when and where fields, respectively - time and address. 
     start_datetime = forms.DateTimeField(
         widget=tdWidgets.DateTimePicker(
             options={
@@ -101,17 +100,14 @@ class MatchForm(forms.ModelForm):
         help_text='The time at which the match is expected to end.'
     )
     location_id = forms.ChoiceField(choices=LOCATION_CHOICES, help_text='A trusted location at which the match will take place.')
-
-
-    # Match participant restriction fields - age and ranking limitations.
     min_age = forms.IntegerField(initial=Match.MIN_AGE_DEFAULT, help_text='Minimum participating age.')
     max_age = forms.IntegerField(initial=Match.MAX_AGE_DEFAULT, help_text='Maximum participating age.')
     min_rating = forms.IntegerField(initial=Match.MIN_RATING_DEFAULT, help_text='The minimum rating of an attendee.')
 
-    # Meta class defines the model and the fields that are to be displayed.
+    # Form metadata.
     class Meta:
         model = Match
-        fields = ('sport_id', 'name', 'start_datetime', 'end_time', 'min_age', 'max_age', 'min_rating')
+        fields = ('sport_id', 'name', 'start_datetime', 'end_time', 'location_id', 'min_age', 'max_age', 'min_rating')
 
 
 # Form defines the necessary fields for creating a profile model.

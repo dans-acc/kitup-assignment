@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 #  The models and forms for the kitup app.
 from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm, EmailPasswordRecovery, MatchParticipantReportForm
-from kitup.models import Profile, Sport, Match, MatchParticipant, MatchParticipantReport
+from kitup.models import Profile, Sport, MatchLocation, Match, MatchParticipant, MatchParticipantReport
 
 # The main index page for the website.
 def index(request):
@@ -65,10 +65,10 @@ def user_register(request):
                 profile.profile_picture = request.FILES['profile_picture']
             profile.save()
 
-            text_success = "You have sucessfully registered! Click <a href="%s">here</a> to login and join the fun!" % reverse('kitup:user_login')
+            #text_success = "You have sucessfully registered! Click <a href="%s">here</a> to login and join the fun!" % reverse('kitup:user_login')
 
             registered = True
-            messages.success(request, text_success)
+            #messages.success(request, text_success)
             return redirect(reverse('kitup:web_response'))
         else:
             print(user_form.errors, profile_form.errors)
@@ -204,10 +204,6 @@ def user_profile(request):
         messages.error(request, "Profile does not exist.")
         return redirect(reverse('kitup:web_response'))
 
-
-
-
-
 # Permits the viewing of another players profile.
 def user_view_profile(request, user_id):
     pass
@@ -222,79 +218,80 @@ def user_settings(request):
 @login_required
 def match_create(request):
 
-    # If true, we're creating the match instance.
-    match_creation_form = None
+    match_form = None
     if request.method == 'POST':
-        
-        # If the form is valid, create the match model, save it, and display it.
-        match_creation_from = MatchForm(request.POST)
-        if match_creation_from.is_valid():
 
-            # Create the instance of match, and set the sport type and match owner.
-            match = match_creation_from.save(commit=False)
-            match.sport = Sport.objects.get(id=match_creation_from.cleaned_data['sport_id'])
-            match.match_owner = request.user
+        # If the form is valid, create a new match.
+        match_form = MatchForm(request.POST)
+        if match_form.is_valid():
+
+            # Create a new instance of match.
+            match = match_form.save(commit=False)
+            match.sport = Sport.objects.get(id=match_form.cleaned_data['sport_id'])
+            match.owner = request.user
+            match.location = MatchLocation.objects.get(id=match_form.cleaned_data['location_id'])
             match.save()
 
-            # Add the owner as a participant.
-            participant = MatchParticipant(user=Profile.objects.get(user=request.user), match=match)
+            # Create an instance of the participant.
+            participant = MatchParticipant(profile=Profile.objects.get(user=request.user), match=match)
             participant.save()
 
-            # Finally, redirect the player so that they can view the match.
-            return redirect(reverse('kitup:match_view', kwargs = {'match_id': match.id}))
+            # Redirect the user to the created match page.
+            return redirect(reverse('kitup:match_view', kwargs={'match_id': match_id}))
         else:
-
-            # Print all of the errors associated with the fields.
-            print(match_creation_from.errors)
+            print(match_form.errors)
     else:
+        match_form = MatchForm()
 
-        # We are getting the form for the first time, return a new instance.
-        match_creation_from = MatchForm()
-
-    # Create the context dictionary and return the form.
+    # Defines creation attributes.
     context_dictionary = {
-        'match_creation_form': match_creation_from,
+        'match_form': match_form,
+        'match': None,
+        'editing': False, 
     }
-    return render(request, 'kitup/match_create.html', context_dictionary)
+
+    # Render the match creation page.
+    return render(request, 'kitup/match_settings.html', context_dictionary)
 
 @login_required
 def match_edit(request, match_id):
 
-    # The user is submitting an existing match.
-    match_creation_from = None
+    # Get the match being edited.
+    match = None
+    try:
+        match = Match.objects.get(id=match_id)
+    except:
+        return HttpResponse('The match does not exist.')
+
+    # If posting, save changes made to the match.
+    match_form = None
     if request.method == 'POST':
-
-        match_creation_from = MatchForm(request.POST)
-        print(f"{match_creation_from.cleaned_data['sport']}")
-
-        # Create the match form.
-        if match_creation_from.is_valid():
-            try:
-
-                # Attempt to edit the match.
-                match = Match.objects.get(id=match_id)
-                if match.owner != request.user:
-                    #return HttpResponse('This match does not belong to you.')
-                    messages.error(request, "This match does not belong to you.")
-                    return redirect(reverse('kitup:web_response'))
-                elif match.is_in_past():
-                    #return HttpResponse('This match cannot be edited')
-                    messages.error(request, "This match cannot be edited")
-                    return redirect(reverse('kitup:web_response'))
-
-
-
-            except Match.DoesNotExist:
-                #return HttpResponse('Match does not exist.')
-                messages.error(request, "Match does not exist.")
-                return redirect(reverse('kitup:web_response'))
-
+        match_form = MatchForm(request.POST, instance=match)
+        if match_form.is_valid():
+            match_form.save()
+            return redirect(reverse('kitup:match_view', kwargs={'match_id': match.id}))
         else:
-            print(match_creation_from.errors)
-
+            print(match_form.errors)
     else:
-        match_creation_from = MatchForm()
+        match_form = MatchForm(instance=match)
+        match_form.fields['sport_id'].widget.attrs['readonly'] = True
+        match_form.fields['sport_id'].widget.attrs['disabled'] = True
+        match_form.fields['start_datetime'].widget.attrs['readonly'] = True
+        match_form.fields['start_datetime'].widget.attrs['disabled'] = True
+        match_form.fields['end_time'].widget.attrs['readonly'] = True
+        match_form.fields['end_time'].widget.attrs['disabled'] = True
+        match_form.fields['location_id'].widget.attrs['readonly'] = True
+        match_form.fields['location_id'].widget.attrs['disabled'] = True
 
+    # Defines edit status.
+    context_dictionary = {
+        'match_form': match_form,
+        'match': match,
+        'editing': True,
+    }
+
+    # Finally, render the match edit page.
+    return render(request, 'kitup/match_settings.html', context_dictionary)
 
 # The user attempts to join the match.
 @login_required
