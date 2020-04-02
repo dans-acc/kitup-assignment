@@ -35,7 +35,7 @@
                 -->
             </div>
         </div>
-        <div class="col-lg-7 col-md-10">
+        <div class="col-lg-9 col-md-10">
             <div class="portlet light bordered">
                 <div class="portlet-title tabbable-line">
                     <div class="caption caption-md">
@@ -76,12 +76,12 @@
 
                             </div>
                             -->
-                            <div role="tabpanel" class="tab-pane active text-center" id="overview">
+                            <div role="tabpanel" class="tab-pane active" id="overview">
                                 <div class="profile-usertitle">
                                     <div class="profile-usertitle-name">Coming up Games</div>
                                 </div>
                                 <div class="row my-12">
-                                    <div class="col-lg-10 col-md-2 mb-4">
+                                    <div class="col-lg-7 col-md-2 mb-4">
 
                                             <!-- Define the match description. -->
                                             {% if matches.len <= 0 %}
@@ -89,7 +89,7 @@
                                             {% else %}
                                                 {% for match in matches %}
                                                     {% if forloop.first %}<div class="row my-2">{% endif %}
-                                                        <div class="col-lg-9 col-md-6 mb-4">
+                                                        <div class="col-lg-10 col-md-6 mb-4">
                                                             <div class="card h-100">
                                                                 <div class="card-body">
 
@@ -112,7 +112,7 @@
                                                                     {% if match.owner == user %}
                                                                     <!-- START: Cancel Match Button and Modal. -->
                                                                     <div class="col-6 pr-1">
-                                                                        <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#cancelMatchConfirmationModal{{ match.id }}">Cancel Match</button>
+                                                                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelMatchConfirmationModal{{ match.id }}">Cancel</button>
                                                                         <div class="modal fade" id="cancelMatchConfirmationModal{{ match.id }}" tabindex="-1" role="dialog" aria-labelledby="cancelMatchConfirmationModalTitle{{ match.id }}" aria-hidden="true">
                                                                             <div class="modal-dialog modal-dialog-centered" role="document">
                                                                                 <div class="modal-content">
@@ -132,15 +132,13 @@
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
                                                                     <!-- END: Cancel Match Button and Modal. -->
-
                                                                     {% else %}
                                                                         <a class="btn btn-danger" href="{% url 'kitup:match_leave' match.id %}" role="button">Leave</a>
                                                                     {% endif %}
                                                                     <a class="btn btn-dark" href="{% url 'kitup:match_view' match.id %}" role="button">View Details</a>
                                                                 </div>
-
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -154,41 +152,6 @@
                                         {% endif %}
                                     </div>
                                 </div>
-                            </div>
-                            <div role="tabpanel" class="tab-pane" id="history">
-                                <div class="profile-usertitle">
-                                    <div class="profile-usertitle-name">Finished Games</div>
-                                </div>
-                                <div class="row my-5">
-                                    <!-- Define the card that's utilised for the addition of new players. -->
-                                    <div class="col-lg-6 col-md-2 mb-4">
-                                        <div class="card h-100">
-                                            <!-- Define the match description. -->
-                                            <div class="card-body">
-
-                                                <!-- The name of the match. -->
-                                                <h4 class="card-title font-weight-light text-center">Game Name</h4>
-
-                                                <!-- General Description of match. -->
-                                                <dl class="row card-text">
-                                                    <dt class="font-weight-light col-sm-4">Sport:</dt>
-                                                    <dd class="col-sm-8">Football</dd>
-                                                    <dt class="font-weight-light col-sm-4">Date:</dt>
-                                                    <dd class="col-sm-8">June, 6 10:20 until 11:20</dd>
-                                                    <dt class="font-weight-light col-sm-4">Location:</dt>
-                                                    <dd class="col-sm-8">35 Middleton Park, Brechin.</dd>
-                                                </dl>
-                                            </div>
-
-                                            <!-- Options for joining or leaving the match. -->
-                                            <div class="card-footer text-center">
-                                                <a class="btn btn-dark" href="#" role="button">View Details</a>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                             </div>
                         </div>
                     </div>

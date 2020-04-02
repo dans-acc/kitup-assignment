@@ -129,7 +129,6 @@ class MatchParticipant(models.Model):
 
     # Model metadata.
     class Meta:
-        unique_together = (('profile', 'match'),)
         verbose_name_plural = 'Match Participants'
 
     # Defines the name of the model.
@@ -161,7 +160,7 @@ class MatchParticipantReport(models.Model):
 
     # Model metadata.
     class Meta:
-        verbose_name_plural = 'Player Reports'
+        verbose_name_plural = 'Reported Participants'
 
     # A string representation of the report.
     def __str__(self):
