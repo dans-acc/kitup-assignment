@@ -6,6 +6,7 @@ from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django import forms
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
 
 #  The models and forms for the kitup app.
 from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm, EmailPasswordRecovery, MatchParticipantReportForm
@@ -66,10 +67,10 @@ def user_register(request):
                 profile.profile_picture = request.FILES['profile_picture']
             profile.save()
 
-            #text_success = "You have sucessfully registered! Click <a href="%s">here</a> to login and join the fun!" % reverse('kitup:user_login')
+
 
             registered = True
-            #messages.success(request, text_success)
+            messages.success(request, mark_safe("You have sucessfully registered! Click <a href='%s'>here</a> to login and join the fun!" % reverse('kitup:user_login')))
             return redirect(reverse('kitup:web_response'))
         else:
             print(user_form.errors, profile_form.errors)
