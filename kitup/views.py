@@ -8,6 +8,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.utils.safestring import mark_safe
 
+
 #  The models and forms for the kitup app.
 from kitup.forms import UserForm, ProfileForm, UserLoginForm, MatchForm, UserUpdateForm, EmailPasswordRecovery, MatchParticipantReportForm
 from kitup.models import Profile, Sport, MatchLocation, Match, MatchParticipant, MatchParticipantReport
