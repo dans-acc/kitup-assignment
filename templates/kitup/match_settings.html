@@ -17,7 +17,11 @@
 
 <!-- New title. -->
 {% block title_block %}
-Create a Match!
+{% if editing %}
+	Editing Match: {{match.name}}
+{% else %}
+	Create a Match!
+{% endif %}
 {% endblock %}
 
 <!-- The content of the page. -->
@@ -150,9 +154,9 @@ Create a Match!
 											<div class="modal-body text-left">
 												<p>
 													{% if editing %}
-														By canceling the editing session, all unsaved changes made to match will be discarded.
+														By canceling the editing session all unsaved changes made to match will be discarded.
 													{% else %}
-														By canceling the creation session, all unsaved settings and / or attributes will be discarded.
+														By canceling the creation session all unsaved settings and / or attributes will be discarded.
 													{% endif %}
 												</p>
 											</div>
@@ -192,7 +196,7 @@ Create a Match!
 													</button>
 												</div>
 												<div class="modal-body text-left">
-													<p>By saving the changes, the corresponding match settings will be updated.</p>
+													<p>By saving the changes the corresponding match settings will be updated.</p>
 												</div>
 												<div class="modal-footer">
 													<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>

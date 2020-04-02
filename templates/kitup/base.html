@@ -58,7 +58,7 @@
 
 					<!-- Home option to get to the home page. -->
 					<li class="nav-item">
-						<a class="nav-link" href="{% url 'kitup:index' %}">Home</a>
+						<a class="nav-link" href="{% url 'kitup:index' %}"><i class="fas fa-home"></i> Home</a>
 					</li>
 					
 					<!-- Display options depending on whether or not the user is logged in. -->
@@ -66,20 +66,20 @@
 
 						<!-- The user has been authenticated, they can view their profile, settings and logout. -->
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:user_profile' %}">Profile</a>
+							<a class="nav-link" href="{% url 'kitup:user_profile' %}"><i class="fas fa-user"></i> Profile</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:user_logout' %}">Logout</a>
+							<a class="nav-link" href="{% url 'kitup:user_logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a>
 						</li>
 
 					{% else %}
 
 						<!-- The user has not been authenticated, they must log in. -->
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:user_login' %}">Login</a>
+							<a class="nav-link" href="{% url 'kitup:user_login' %}"><i class="fas fa-sign-in-alt"></i> Login</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="{% url 'kitup:user_register' %}">Register</a>
+							<a class="nav-link" href="{% url 'kitup:user_register' %}"><i class="fas fa-plus"></i> Register</a>
 						</li>
 
 					{% endif %}

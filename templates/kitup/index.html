@@ -95,9 +95,9 @@
 						<dt class="font-weight-light col-sm-4">Sport:</dt>
 						<dd class="col-sm-8">{{ match.sport.name }}</dd>
 						<dt class="font-weight-light col-sm-4">Date:</dt>
-						<dd class="col-sm-8">{{ match.start_datetime }} to {{ match.end_time }}</dd>
+						<dd class="col-sm-8">{{ match.start_datetime }} until {{ match.end_time }}</dd>
 						<dt class="font-weight-light col-sm-4">Location:</dt>
-						<dd class="col-sm-8">35 Middleton Park, Brechin.</dd>
+						<dd class="col-sm-8">{{match.location.address|title}}, {{match.location.post_code}}, {{match.location.city|title}}</dd>
 					</dl>
 
 				</div>
@@ -134,7 +134,7 @@
 
 												<!-- The body of the confirmation box. -->
 												<div class="modal-body text-left">
-													<p>By cancelling the match, all participants will be removed and the event will be suspended indefinitely.</p>
+													<p>By cancelling the match all participants will be removed and the event will be suspended indefinitely.</p>
 												</div>
 												
 												<!-- The options associated. -->

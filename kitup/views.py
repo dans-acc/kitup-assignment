@@ -1,4 +1,5 @@
 from django.contrib import messages
+from django.conf import settings
 from django.shortcuts import render, redirect, reverse
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout, get_user_model
@@ -620,6 +621,7 @@ def match_view(request, match_id):
                 pending_participants = MatchParticipant.objects.filter(match=match, accepted=False)
 
         # Set the match context values.
+        context_dictionary['settings'] = settings
         context_dictionary['match'] = match
         context_dictionary['match_is_in_past'] = match.is_in_past()
         context_dictionary['match_is_full'] = match.sport.max_participants <= accepted_participants.count()

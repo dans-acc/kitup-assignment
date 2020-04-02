@@ -7,6 +7,17 @@
 Viewing Match
 {% endblock %}
 
+<!-- Add an additional block for google maps. -->
+{% block js_block %}
+<script type="text/javascript">
+	function initMap() {
+  		var uluru = {lat: {{match.location.latitude}}, lng: {{match.location.longitude}}};
+  		var map = new google.maps.Map(document.getElementById('match_location_map'), {zoom: 7, center: uluru});
+ 		var marker = new google.maps.Marker({position: uluru, map: map});
+ 	}
+</script>
+{% endblock %}
+
 <!-- Overwrite the opening body tag. -->
 {% block body_opening_tag %}
 <body class=".kitup-padding-top-56px">
@@ -23,7 +34,9 @@ Viewing Match
 
 		<!-- Google maps displays the location of the match. -->
 		<div class="col-lg-7">
-			<img class="img-fluid rounded mb-4 mb-lg-0" src="http://placehold.it/900x400" alt="">
+			<div id='match_location_map' style="width: 100%; height: 350px;"></div>
+			<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDIj0SneZsfoYp6GTn4cCB5m2Vw7igB9Sg&callback=initMap"></script>
+			<!--<img class="img-fluid rounded mb-4 mb-lg-0" src="http://placehold.it/900x400" alt="">-->
 		</div>
 
 		<!-- Display information and options about the match. -->
@@ -34,12 +47,10 @@ Viewing Match
 			<dl class="row">
 				<dt class="font-weight-light col-sm-3">Sport:</dt>
 				<dd class="col-sm-9">{{ match.sport.name }}</dd>
-				
 				<dt class="font-weight-light col-sm-3">Date:</dt>
-				<dd class="col-sm-9">June, 6 10:20 until 11:20</dd>
+				<dd class="col-sm-9">{{ match.start_datetime }} until {{ match.end_time }}</dd>
 				<dt class="font-weight-light col-sm-3">Location:</dt>
-				<dd class="col-sm-9">35 Middleton Park, Brechin.</dd>
-				
+				<dd class="col-sm-9">{{match.location.address|title}}, {{match.location.post_code}}, {{match.location.city|title}}</dd>
 				<dt class="font-weight-light col-sm-3">Ages:</dt>
 				<dd class="col-sm-9">{{ match.min_age }} to {{ match.max_age }}</dd>
 				<dt class="font-weight-light col-sm-3">Min. Rating:</dt>
@@ -76,7 +87,7 @@ Viewing Match
 										</button>
 									</div>
 									<div class="modal-body">
-										<p>By clicking <q>Cancel</q> the match <q>{{ match.name }}</q> will be cancelled from running. Consequently, this match will no longer be accessible.</p>
+										<p>By cancelling the match all participants will be removed and the event will be suspended indefinitely.</p>
 									</div>
 									<div class="modal-footer">
 										<button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
@@ -198,7 +209,8 @@ Viewing Match
 				{% else %}
 
 					<!-- If they are not authenticated, take them to the login page. -->
-					<a class="btn btn-success" href="{% url 'kitup:user_login' %}" role="button">Login to Join</a>
+					<a class="btn btn-success mr-1" href="{% url 'kitup:user_login' %}" role="button">Login</a>
+					<a class="btn btn-dark" href="{% url 'kitup:user_register' %}" role="button">Register</a>
 
 				{% endif %}
 

@@ -71,7 +71,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 TEMPUS_DOMINUS_LOCALIZE = True
 
 # Required by django-address, attempts to find the exact whereabouts.
-GOOGLE_API_KEY = 'AIzaSyDIj0SneZsfoYp6GTn4cCB5m2Vw7igB9Sg'
+GOOGLE_MAPS_API_KEY = 'AIzaSyBwClOfCiTEPWoQMbrGFONt6wYFHbu2FZE'
 
 # Application definition
 INSTALLED_APPS = [
