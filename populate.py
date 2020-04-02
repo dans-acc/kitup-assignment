@@ -10,10 +10,11 @@ from django.contrib.auth.models import User
 
 
 from kitup.models import Profile, Sport, Match, MatchParticipant, MatchLocation, MatchParticipantReport, ReportReason
+from datetime import datetime, time, date
 
 
 def populate():
-    password = 'test123'
+    password = 'password123'
 
     # Setup users first
     users = [
@@ -44,22 +45,22 @@ def populate():
     profiles = [
         {
             'user_id': 1,
-            'profile_picture': 'test1.png',
-            'date_of_birth': '1989-03-25',
+            'profile_picture': 'profile_images/test1.png',
+            'date_of_birth': date(year=1989, month=3, day=25),
             'rating': 3.0,
             'reported': 0
         },
         {
             'user_id': 2,
-            'profile_picture': 'test2.png',
-            'date_of_birth': '1998-01-1998',
+            'profile_picture': 'profile_images/test2.png',
+            'date_of_birth': date(year=1998, month=1, day=30),
             'rating': 1.5,
             'reported': 1
         },
         {
             'user_id': 3,
-            'profile_picture': 'test3.png',
-            'date_of_birth': '1999-08-23',
+            'profile_picture': 'profile_images/test3.png',
+            'date_of_birth': date(year=1999, month=8, day=23),
             'rating': 4.5,
             'reported': 0
         }
@@ -70,17 +71,17 @@ def populate():
         {
             'name': '5-aside Football',
             'max_participants': 12,
-            'sport_picture': 'football.jpg'
+            'sport_picture': 'sport_images/football.jpg'
         },
         {
             'name': '7-aside Football',
             'max_participants': 16,
-            'sport_picture': 'football.jpg'
+            'sport_picture': 'sport_images/football.jpg'
         },
         {
             'name': '11-aside Football',
             'max_participants': 24,
-            'sport_picture': 'football.jpg'
+            'sport_picture': 'sport_images/football.jpg'
         }
     ]
 
@@ -89,18 +90,18 @@ def populate():
         {
             'name': 'Stevenson Building',
             'address': '77 Oakfield Avenue',
-            'postcode': 'G12 8LT',
+            'post_code': 'G12 8LT',
             'city': 'Glasgow',
-            'latitude': 55.8726,
-            'longitude': 4.2857
+            'latitude': 4.2857,
+            'longitude': 55.8726
         },
         {
             'name': 'Garscube Sports Complex',
-            'address': 'West of Scotland Science Park, Maryhill Road',
-            'postcode': 'G20 0SP',
+            'address': 'West of Scotland Science Park',
+            'post_code': 'G20 0SP',
             'city': 'Glasgow',
-            'latitude': 55.8998,
-            'longitude': 4.3129
+            'latitude': 4.3129,
+            'longitude': 55.8998
         }
     ]
 
@@ -108,8 +109,9 @@ def populate():
     matches = [
         {
             'name': 'Bobs return',
-            'start_datetime': '2020-04-25 21:00:00',
-            'end_time': '22:00:00',
+            'start_datetime': datetime(year=2020, month=4, day=25,  hour=21,
+                                       minute=0, second=0),
+            'end_time': time(hour=22, minute=00, second=00),
             'min_age': 20,
             'max_age': 25,
             'private': 0,
@@ -119,8 +121,9 @@ def populate():
         },
         {
             'name': 'revenge',
-            'start_datetime': '2020-07-25 21:00:00',
-            'end_time': '22:00:00',
+            'start_datetime': datetime(year=2020, month=7, day=25,
+                                       hour=21, minute=00, second=00),
+            'end_time': time(hour=22,minute=00, second=00),
             'min_age': 20,
             'max_age': 35,
             'private': 0,
@@ -186,7 +189,7 @@ def populate():
 
     # Iterate through locations
     for location in locations:
-        l = populate_match_locations(location['name'], location['address'], location['postcode'],
+        l = populate_match_locations(location['name'], location['address'], location['post_code'],
                                      location['city'], location['latitude'], location['longitude'])
 
     # Iterate through matches
@@ -208,9 +211,10 @@ def populate():
 
 # Function for populating the users table
 def populate_users(username, email, first_name, last_name, password):
+    user = User()
     user = User.objects.get_or_create(username=username, email=email,
-                                      first_name=first_name, last_name=last_name,
-                                      password=User.set_password(password))[0]
+                                      first_name=first_name, last_name=last_name)[0]
+    user.set_password(raw_password=password)
     user.save()
     return user
 
@@ -219,7 +223,7 @@ def populate_users(username, email, first_name, last_name, password):
 def populate_profiles(user_id, profile_picture, date_of_birth, rating, reported):
     profile = Profile.objects.get_or_create(user_id=user_id, profile_picture=profile_picture,
                                             date_of_birth=date_of_birth, rating=rating,
-                                            reported=reported)
+                                            reported=reported)[0]
     profile.save()
     return profile
 
@@ -227,7 +231,7 @@ def populate_profiles(user_id, profile_picture, date_of_birth, rating, reported)
 # Function for populating the sport table
 def populate_sports(name, max_participants, sport_picture):
     sport = Sport.objects.get_or_create(name=name, max_participants=max_participants,
-                                        sport_picture=sport_picture)
+                                        sport_picture=sport_picture)[0]
     sport.save()
     return sport
 
@@ -235,8 +239,8 @@ def populate_sports(name, max_participants, sport_picture):
 # Function to populate the macth location table
 def populate_match_locations(name, address, postcode, city, latitude, longitude):
     location = MatchLocation.objects.get_or_create(name=name, address=address,
-                                                   postcode=postcode, city=city,
-                                                   latitude=latitude, longitude=longitude)
+                                                   post_code=postcode, city=city,
+                                                   latitude=latitude, longitude=longitude)[0]
     location.save()
     return location
 
@@ -245,7 +249,7 @@ def populate_match_locations(name, address, postcode, city, latitude, longitude)
 def populate_matches(name, start_datetime, end_time, min_age, max_age, private, location_id, owner_id, sport_id):
     match = Match.objects.get_or_create(name=name, start_datetime=start_datetime, end_time=end_time,
                                         min_age=min_age, max_age=max_age, private=private,
-                                        location_id=location_id, owner_id=owner_id, sport_id=sport_id)
+                                        location_id=location_id, owner_id=owner_id, sport_id=sport_id)[0]
     match.save()
     return match
 
@@ -253,7 +257,7 @@ def populate_matches(name, start_datetime, end_time, min_age, max_age, private, 
 # Function for populating the match participants table
 def populate_match_participants(accepted, match_id, profile_id):
     participant = MatchParticipant.objects.get_or_create(accepted=accepted, match_id=match_id,
-                                                         profile_id=profile_id)
+                                                         profile_id=profile_id)[0]
     participant.save()
     return participant
 
@@ -262,7 +266,7 @@ def populate_match_participants(accepted, match_id, profile_id):
 def populate_match_report(reason, desc, match_id, reported_user_id, reporting_user_id):
     report = MatchParticipantReport.objects.get_or_create(reason=reason, desc=desc, match_id=match_id,
                                                           reported_user_id=reported_user_id,
-                                                          reporting_user_id=reporting_user_id)
+                                                          reporting_user_id=reporting_user_id)[0]
     report.save()
     return report
 

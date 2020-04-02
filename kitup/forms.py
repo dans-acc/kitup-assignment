@@ -74,11 +74,11 @@ class UserForm(forms.ModelForm):
 class MatchForm(forms.ModelForm):
     
     # Used to populate a pre-defined set of choices.
-    SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
-    LOCATION_CHOICES = [(location.id, f"{location.address}, {location.post_code}, {location.city} ({location.name})") for location in MatchLocation.objects.all()]
+    #SPORTS_CHOICES = [(sport.id, sport.name) for sport in Sport.objects.all()]
+    #LOCATION_CHOICES = [(location.id, f"{location.address}, {location.post_code}, {location.city} ({location.name})") for location in MatchLocation.objects.all()]
 
     # The fields that are utilised to create the match.
-    sport_id = forms.ChoiceField(choices=SPORTS_CHOICES, help_text='The sport for which the match is being held.')
+    sport_id = forms.ChoiceField( help_text='The sport for which the match is being held.')
     name = forms.CharField(max_length=Match.NAME_MAX_LEN, help_text='The name of the match.')
     start_datetime = forms.DateTimeField(
         widget=tdWidgets.DateTimePicker(
@@ -99,7 +99,7 @@ class MatchForm(forms.ModelForm):
         ),
         help_text='The time at which the match is expected to end.'
     )
-    location_id = forms.ChoiceField(choices=LOCATION_CHOICES, help_text='A trusted location at which the match will take place.')
+    location_id = forms.ChoiceField( help_text='A trusted location at which the match will take place.')
     min_age = forms.IntegerField(initial=Match.MIN_AGE_DEFAULT, help_text='Minimum participating age.')
     max_age = forms.IntegerField(initial=Match.MAX_AGE_DEFAULT, help_text='Maximum participating age.')
     min_rating = forms.IntegerField(initial=Match.MIN_RATING_DEFAULT, help_text='The minimum rating of an attendee.')
