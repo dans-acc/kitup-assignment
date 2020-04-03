@@ -314,13 +314,13 @@ def match_join(request, match_id):
 
         # Handle if they've already joined the match.
         participant = None
-        if MatchParticipant.objects.filter(profile=profile).exists():
+        if MatchParticipant.objects.filter(profile=profile, match=match).exists():
 
             # Check their request.
             participant = MatchParticipant.objects.get(profile=profile)
             if participant.accepted:
                 #return HttpResponse('Already accepted')
-                messages.warning(request, "Already accepted")
+                messages.warning(request, f"{participant.profile.user.username} {participant.match.id} {participant.match.name} Already accepted {match_id}")
                 return redirect(reverse('kitup:web_response'))
             else:
                 #return HttpResponse('Awaiting Response')
@@ -341,10 +341,7 @@ def match_join(request, match_id):
         messages.error(request, "Match does not exist")
         return redirect(reverse('kitup:web_response'))
 
-    # An Should not reach this point.
-    #return HttpResponse('Participation request made.')
-    messages.success(request, "Participation request made.")
-    return redirect(reverse('kitup:web_response'))
+    return redirect(reverse('kitup:match_view', kwargs={'match_id': match.id}))
 
 # The user is attempting to leave the match.
 @login_required

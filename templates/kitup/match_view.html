@@ -152,7 +152,7 @@ Viewing Match
 						{% else %}
 
 							<!-- The type of button that's to be displayed to the user for leaving the match. -->
-							<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#joinMatchModal">
+							<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveMatchModal">
 								{% if user_participant.accepted %}
 									Leave Match
 								{% else %}
@@ -182,7 +182,7 @@ Viewing Match
 											</div>
 											<div class="modal-footer">
 												<button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-												<a class="btn btn-success" href="{% url 'kitup:match_leave' match.id %}" role="button">
+												<a class="btn btn-danger" href="{% url 'kitup:match_leave' match.id %}" role="button">
 													{% if user_participant.accepted %}
 														Leave Match
 													{% else %}
