@@ -69,16 +69,48 @@ Viewing Match
 					{% if user_is_owner %}
 
 						<!-- Display owner related options. -->
-						<a class="btn btn-success mr-1" href="#" role="button">Match Requests</a>
+						<!-- <a class="btn btn-success mr-1" href="#" role="button">Match Requests</a>-->
+						<button type="button" class="btn btn-success mr-1" data-toggle="modal" data-target="#matchRequestsModal">Match Requests</button>
 						<a class="btn btn-dark mr-1" href="{% url 'kitup:match_edit' match.id %}" role="button">Edit Details</a>
 						<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#cancelMatchConfirmationModal">Cancel Match</button>
 
 						<!-- Modal for displaying the requests. -->
+						<div class="modal fade" id="matchRequestsModal" tabindex="-1" role="dialog" aria-labelledby="matchRequestsModalTitle" aria-hidden="true">
+							<div class="modal-dialog modal-lg modal-dialog-scrollable" role="document">
+								<div class="modal-content">
 
+									<!-- All sent match requests. -->
+									<div class="modal-header">
+										<h5 class="modal-title" id="matchRequestsModalTitle">Match Requests</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+
+									<!-- The body of the request list, displays participants that want to join. -->
+									<div class="modal-body">
+										<ul class="list-group">
+											{% for participant in match_pending_participants %}
+												<li class="list-group-item">{{participant.profile.user.username}}
+													<a class="btn btn-danger pull-right" href="{% url 'kitup:match_kick' participant.id %}" role="button">Deny</a>
+													<a class="btn btn-success pull-right mr-1" href="{% url 'kitup:match_accept' participant.id %}" role="button">Accept</a>
+												</li>
+											{% endfor %}
+										</ul>
+									</div>
+
+									<!-- The footer permits the closure of the popup. -->
+									<div class="modal-footer">
+										<button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+									</div>
+
+								</div>
+							</div>
+						</div>
 
 						<!-- Modal for confirmation of cancelation; forces user to confirm their actions. -->
 						<div class="modal fade" id="cancelMatchConfirmationModal" tabindex="-1" role="dialog" aria-labelledby="cancelMatchConfirmationModalTitle" aria-hidden="true">
-							<div class="modal-dialog modal-dialog-centered" role="document">
+							<div class="modal-dialog" role="document">
 								<div class="modal-content">
 									<div class="modal-header">
 										<h5 class="modal-title" id="cancelMatchConfirmationModalTitle">Cancel Match: {{ match.name }}</h5>
@@ -114,7 +146,7 @@ Viewing Match
 
 							<!-- START: User join request modal. -->
 							<div class="modal fade" id="joinMatchModal" tabindex="-1" role="dialog" aria-labelledby="joinMatchModalTitle" aria-hidden="true">
-								<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										<form id="participant_report_form" method="post">
 											<div class="modal-header">
@@ -162,7 +194,7 @@ Viewing Match
 
 							<!-- START: User leave match modal. -->
 							<div class="modal fade" id="leaveMatchModal" tabindex="-1" role="dialog" aria-labelledby="leaveMatchModalTitle" aria-hidden="true">
-								<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-dialog" role="document">
 									<div class="modal-content">
 										<form id="participant_report_form" method="post">
 											<div class="modal-header">
@@ -291,7 +323,7 @@ Viewing Match
 										<!-- START: Report player form modal. -->
 										<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#reportParticipant{{ participant.id }}Modal">Report</button>
 										<div class="modal fade" id="reportParticipant{{ participant.id }}Modal" tabindex="-1" role="dialog" aria-labelledby="reportParticipant{{ participant.id }}ModalTitle" aria-hidden="true">
-											<div class="modal-dialog modal-dialog-centered" role="document">
+											<div class="modal-dialog" role="document">
 												<div class="modal-content">
 													<form id="report_participant_form" method="post">
 														
@@ -340,7 +372,7 @@ Viewing Match
 											<!-- Start: Kick participant modal. -->
 											<button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#kickParticipant{{ participant.id }}Modal">Kick</button>
 											<div class="modal fade" id="kickParticipant{{ participant.id }}Modal" tabindex="-1" role="dialog" aria-labelledby="kickParticipant{{ participant.id }}ModalTitle" aria-hidden="true">
-												<div class="modal-dialog modal-dialog-centered" role="document">
+												<div class="modal-dialog" role="document">
 													<div class="modal-content">
 														<form id="participant_kick_form" method="post">
 															
@@ -354,7 +386,7 @@ Viewing Match
 
 															<!-- Display the conseqience of kicking someone fromt he match. -->
 															<div class="modal-body">
-																<p>By clicking <q>Kick Participant</q> the corresponding user ({{ participant.profile.user.username}}) will be kicked from the match.</p>
+																<p>By kicking the participant they will no longer be able to participate in this match.</p>
 															</div>
 
 															<!-- Display the buttons for the participant. -->

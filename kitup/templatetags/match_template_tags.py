@@ -28,6 +28,15 @@ def get_match_owner_profile(user):
 	except Profile.DoesNotExist:
 		return None
 
+@register.simple_tag
+def get_match_participants(match, accepted):
+	try:
+		return MatchParticipant.objects.filter(match=match, accepted=accepted)
+	except MatchParticipant.DoesNotExist:
+		return None
+	except Match.DoesNotExist:
+		return None
+
 # Get the participant instance for a given match.
 @register.simple_tag
 def get_match_participant(match, user):

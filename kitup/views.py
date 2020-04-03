@@ -188,6 +188,7 @@ def user_profile(request):
             matches.append(match)
 
         print(matches)
+        context_dictionary['viewing_profile'] = False
         context_dictionary['first_name'] = user_meta_data.first_name
         context_dictionary['last_name'] = user_meta_data.last_name
         context_dictionary['email'] = user_meta_data.email
@@ -208,8 +209,45 @@ def user_profile(request):
         return redirect(reverse('kitup:web_response'))
 
 # Permits the viewing of another players profile.
-def user_view_profile(request, user_id):
-    pass
+@login_required
+def user_view_profile(request, profile_id):
+
+    try:
+        context_dictionary = {}
+        context_dictionary['user_update_form'] = UserUpdateForm
+
+        profile = Profile.objects.get(id=profile_id)
+        user = profile.user
+
+        matches_participants = MatchParticipant.objects.filter(profile=profile)
+        matches = []
+        for matches_participant in matches_participants:
+            match = Match.objects.get(name=matches_participant.match)
+            matches.append(match)
+
+        print(matches)
+        context_dictionary['viewing_profile'] = True
+        context_dictionary['first_name'] = user.first_name
+        context_dictionary['last_name'] = user.last_name
+        context_dictionary['email'] = user.email
+        context_dictionary['rating'] = profile.rating
+        if profile.profile_picture is not None:
+            context_dictionary['profile_picture'] = profile.profile_picture
+        else:
+            context_dictionary['profile_picture'] = None
+        context_dictionary['matches'] = matches
+
+        #print(user_meta_data.Profile.strikes)
+        response = render(request, 'kitup/user_profile.html', context_dictionary)
+        return response
+
+    except User.DoesNotExist:
+        messages.error(request, 'User does not exist')
+        return redirect(reverse('kitup:web_response'))
+
+    except Profile.DoesNotExist:
+        messages.error(request, "Profile does not exist.")
+        return redirect(reverse('kitup:web_response'))
 
 
 # Permits the user to edit / alter their settings.
@@ -462,27 +500,31 @@ def match_report(request, participant_id):
 # Permits the owner to accept a user into the match in the event it is private.
 @login_required
 def match_accept(request, participant_id):
-    
+
+    # Prevent random access.
+    if request.method != 'POST':
+        messages.error('You are unable to access this url.')
+        return redirect(reverse('kitup:web_response'))
+
+    participant = None
+    match = None
     try:
 
         # Get the participant that's to be accepted, check if they're accepted.
         participant = MatchParticipant.objects.get(id=participant_id)
+        match = participant.match
 
         # Check wherher they can be accepted.
         if participant.accepted:
-            #return HttpResponse('Participant already accepted.')
             messages.warning(request, "Participant already accepted")
             return redirect(reverse('kitup:web_response'))
-        elif not participant.match.owner is request.user:
-            #return HttpResponse('You do not have permission to accept the user')
+        elif participant.match.owner != request.user:
             messages.error(request, "You do not have permission to accept the user")
             return redirect(reverse('kitup:web_response'))
         elif match.is_in_past():
-            #return HttpResponse('Match is in past, cannot accept additional players.')
             messages.error(request, "Match is in past, cannot accept additional players")
             return redirect(reverse('kitup:web_response'))
-        elif match.sport.max_participants <= MatchParticipant.objects.filter(match=participant.match, accepted=True):
-            #return HttpResponse('The maximum number of participants have been accepted.')
+        elif match.sport.max_participants <= MatchParticipant.objects.filter(match=participant.match, accepted=True).count():
             messages.error(request, "The maximum number of participants have been accepted")
             return redirect(reverse('kitup:web_response'))
 
@@ -491,50 +533,46 @@ def match_accept(request, participant_id):
         participant.save()
 
     except MatchParticipant.DoesNotExist:
-        #return HttpResponse('Match participant does not exist.')
+
+        # The participant could not be found.
         messages.error(request, "Match participant does not exist")
         return redirect(reverse('kitup:web_response'))
 
-    # We have successfully accepted the participant.
-    #return HttpResponse('Participant successfully accepted')
-    messages.success(request, "Participant successfully accepted")
-    return redirect(reverse('kitup:web_response'))
+    return redirect(reverse('kitup:match_view', kwargs={'match_id': match.id}))
 
 # Permits the owner to kick a player from the match.
 @login_required
 def match_kick(request, participant_id):
     
+    participant = None
+    match = None
     try:
 
         # Get the participant that is being kicked.
         participant = MatchParticipant.objects.get(id=participant_id)
+        match = participant.match
 
-        # Check that the participant can be kicked.
+        # If the match is in past, we cannot kick.
         if match.is_in_past():
-            #return HttpResponse('Cannot kick participant, match in the past')
             messages.error(request, "Cannot kick participant, match in the past")
             return redirect(reverse('kitup:web_response'))
-        elif participant.match.owner is not request.user:
-            #return HttpResponse('You do not have permission to kick yourself')
+
+        # If the user is not the owner, cant kick.
+        elif match.owner != request.user:
             messages.error(request, "You do not have permission to kick yourself")
-            return redirect(reverse('kitup:web_response'))
-        elif not participant.accepted:
-            #return HttpResponse('The participant has not been accepted')
-            messages.error(request, "The participant has not been accepted")
             return redirect(reverse('kitup:web_response'))
 
         # Finally, we can kick the participant from the match.
         participant.delete()
 
     except MatchParticipant.DoesNotExist:
-        #return HttpResponse('The match participant does not exist.')
+
+        # The participant for this match does not exist.
         messages.error(request, "The match participant does not exist")
         return redirect(reverse('kitup:web_response'))
 
-    # We have successfully kicked the participant.
-    #return HttpResponse('Participant successfully kicked')
-    messages.success(request, "Participant successfully kicked")
-    return redirect(reverse('kitup:web_response'))
+    # Successfully kicked the participant.
+    return redirect(reverse('kitup:match_view', kwargs={'match_id': match.id}))
 
 
 # Permits the match to be viewed.

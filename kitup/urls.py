@@ -32,7 +32,7 @@ urlpatterns = [
     path('reset/done/', views.PasswordResetCompleteView.as_view(), name='password_reset_complete'),
 
     path('profile/', kitup_views.user_profile, name='user_profile'),
-    path('profile/<int:user_id>/', kitup_views.user_view_profile, name='user_view_profile'),
+    path('profile/<int:profile_id>/', kitup_views.user_view_profile, name='user_view_profile'),
     path('settings/', kitup_views.user_settings, name='user_settings'),
 
     path('match/create', kitup_views.match_create, name='match_create'),
